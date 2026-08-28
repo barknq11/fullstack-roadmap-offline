@@ -730,19 +730,7 @@ function renderGraph() {
     default: cs.getPropertyValue('--border').trim() || '#cbd5e1'
   };
 
-  // Edges first (behind nodes)
-  edges.forEach(e => {
-    const src = nodes[e.source], tgt = nodes[e.target];
-    if (!src || !tgt || !sizeMap[e.source] || !sizeMap[e.target]) return;
-    const ss = sizeMap[e.source], ts = sizeMap[e.target];
-    const x1=src.x+ss.w/2, y1=src.y+ss.h, x2=tgt.x+ts.w/2, y2=tgt.y;
-    // Smoothstep path: down from source, across, down to target
-    const midY = (y1 + y2) / 2;
-    const path = `M${x1},${y1} L${x1},${midY} L${x2},${midY} L${x2},${y2}`;
-    svgContent += `<path class="edge-line" d="${path}" stroke="${edgeColor}" stroke-width="2" fill="none"/>`;
-  });
-
-  // Nodes
+  // Nodes first (edges will be drawn on top)
   renderable.forEach(n => {
     const s = sizeMap[n.id];
     const fill = nodeFills[n.type] || nodeFills.default;
@@ -762,6 +750,18 @@ function renderGraph() {
     svgContent += `<rect class="node-rect${selectedTopicId===nodeId?' highlighted':''}" x="${n.x}" y="${n.y}" width="${s.w}" height="${s.h}" rx="7" ry="7" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`;
     svgContent += `<text class="${labelClass}" x="${n.x+s.w/2}" y="${n.y+s.h/2}" font-size="${fontSize}">${esc(displayLabel)}</text>`;
     svgContent += '</g>';
+  });
+
+  // Edges on top of nodes (with slight transparency)
+  edges.forEach(e => {
+    const src = nodes[e.source], tgt = nodes[e.target];
+    if (!src || !tgt || !sizeMap[e.source] || !sizeMap[e.target]) return;
+    const ss = sizeMap[e.source], ts = sizeMap[e.target];
+    const x1=src.x+ss.w/2, y1=src.y+ss.h, x2=tgt.x+ts.w/2, y2=tgt.y;
+    // Smoothstep path: down from source, across, down to target
+    const midY = (y1 + y2) / 2;
+    const path = `M${x1},${y1} L${x1},${midY} L${x2},${midY} L${x2},${y2}`;
+    svgContent += `<path class="edge-line" d="${path}" stroke="${edgeColor}" stroke-width="2" fill="none" opacity="0.5"/>`;
   });
 
   svgContent += '</g>';
