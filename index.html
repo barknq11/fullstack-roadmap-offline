@@ -547,7 +547,7 @@ function showWelcome() {
 document.getElementById('search').addEventListener('input', e => buildSidebar(e.target.value.trim()));
 
 // ===== Graph Rendering =====
-let graphScale = 1, graphPanX = 0, graphPanY = 0, isPanning = false, panStartX = 0, panStartY = 0;
+let graphScale = 1, graphPanX = 0, graphPanY = 0, isPanning = false, panStartX = 0, panStartY = 0, panMouseDownX = 0, panMouseDownY = false;
 
 function renderGraph() {
   const svg = document.getElementById('roadmapSvg');
@@ -646,7 +646,7 @@ function renderGraph() {
     if (label.length > maxChars && n.type !== 'title' && n.type !== 'paragraph') {
       displayLabel = label.substring(0, maxChars-1) + '\u2026';
     }
-    svgContent += `<g data-nodeid="${esc(nodeId)}" ${isClickable?`style="cursor:pointer" onclick="selectTopicFromGraph('${esc(nodeId)}')"`:''}>`;
+    svgContent += `<g data-nodeid="${esc(nodeId)}" ${isClickable?`style="cursor:pointer" onclick="if(!didDrag)selectTopicFromGraph('${esc(nodeId)}')"`:''}>`;
     svgContent += `<rect class="node-rect${selectedTopicId===nodeId?' highlighted':''}" x="${n.x}" y="${n.y}" width="${s.w}" height="${s.h}" rx="7" ry="7" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`;
     svgContent += `<text class="${labelClass}" x="${n.x+s.w/2}" y="${n.y+s.h/2}" font-size="${fontSize}">${esc(displayLabel)}</text>`;
     svgContent += '</g>';
@@ -682,12 +682,13 @@ function highlightGraphNode(nodeId) {
   }
 }
 
-// Graph pan/zoom
+// Graph pan/zoom with drag detection
 const svgEl = document.getElementById('roadmapSvg');
-svgEl.addEventListener('mousedown', e => { isPanning=true; panStartX=e.clientX-graphPanX; panStartY=e.clientY-graphPanY; });
-svgEl.addEventListener('mousemove', e => { if (!isPanning) return; graphPanX=e.clientX-panStartX; graphPanY=e.clientY-panStartY; updateGraphTransform(); });
-svgEl.addEventListener('mouseup', () => isPanning=false);
-svgEl.addEventListener('mouseleave', () => isPanning=false);
+let didDrag = false;
+svgEl.addEventListener('mousedown', e => { isPanning=true; didDrag=false; panStartX=e.clientX-graphPanX; panStartY=e.clientY-graphPanY; panMouseDownX=e.clientX; panMouseDownY=e.clientY; });
+svgEl.addEventListener('mousemove', e => { if (!isPanning) return; const dx=e.clientX-panMouseDownX, dy=e.clientY-panMouseDownY; if (Math.abs(dx)>4||Math.abs(dy)>4) didDrag=true; graphPanX=e.clientX-panStartX; graphPanY=e.clientY-panStartY; updateGraphTransform(); });
+svgEl.addEventListener('mouseup', () => { isPanning=false; setTimeout(()=>{ didDrag=false; },0); });
+svgEl.addEventListener('mouseleave', () => { isPanning=false; didDrag=false; });
 svgEl.addEventListener('wheel', e => { e.preventDefault(); const d=e.deltaY>0?0.9:1.1; graphScale=Math.max(0.2,Math.min(5,graphScale*d)); updateGraphTransform(); });
 document.getElementById('zoomIn').addEventListener('click', () => { graphScale=Math.min(5,graphScale*1.2); updateGraphTransform(); });
 document.getElementById('zoomOut').addEventListener('click', () => { graphScale=Math.max(0.2,graphScale*0.8); updateGraphTransform(); });
