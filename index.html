@@ -35,6 +35,10 @@
     --badge-feed-bg: #e0f2fe; --badge-feed-text: #075985;
     --badge-roadmap-bg: #f1f5f9; --badge-roadmap-text: #64748b;
     --badge-default-bg: #f1f5f9; --badge-default-text: #64748b;
+    --status-completed: #16a34a; --status-inprogress: #f59e0b; --status-notstarted: #94a3b8;
+    --status-completed-bg: #dcfce7; --status-inprogress-bg: #fef3c7; --status-notstarted-bg: #f1f5f9;
+    --graph-completed: #22c55e; --graph-inprogress: #fbbf24;
+    --filter-active-bg: rgba(255,255,255,0.15); --filter-active-text: #fff;
   }
   [data-theme="dark"] {
     --bg: #0f172a;
@@ -66,6 +70,10 @@
     --badge-feed-bg: #0c4a6e; --badge-feed-text: #7dd3fc;
     --badge-roadmap-bg: #1e293b; --badge-roadmap-text: #94a3b8;
     --badge-default-bg: #1e293b; --badge-default-text: #94a3b8;
+    --status-completed: #22c55e; --status-inprogress: #fbbf24; --status-notstarted: #64748b;
+    --status-completed-bg: #052e16; --status-inprogress-bg: #422006; --status-notstarted-bg: #1e293b;
+    --graph-completed: #22c55e; --graph-inprogress: #fbbf24;
+    --filter-active-bg: rgba(255,255,255,0.15); --filter-active-text: #fff;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -150,6 +158,33 @@
     margin-left: auto; font-size: 10px; color: var(--muted);
     background: var(--hover); padding: 1px 5px; border-radius: 8px;
   }
+  .topic-item .status-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    border: 1.5px solid var(--border); transition: all 0.15s;
+  }
+  .topic-item .status-dot.completed { background: var(--status-completed); border-color: var(--status-completed); }
+  .topic-item .status-dot.in-progress { background: var(--status-inprogress); border-color: var(--status-inprogress); }
+  .topic-item .status-dot.not-started { background: transparent; border-color: var(--status-notstarted); }
+
+  /* Filter tabs */
+  .filter-tabs { display: flex; gap: 4px; padding: 8px 12px 0; }
+  .filter-tab {
+    flex: 1; padding: 5px 8px; border-radius: 6px; cursor: pointer;
+    font-size: 11px; font-weight: 600; text-align: center;
+    color: var(--muted); background: transparent; border: 1px solid var(--border);
+    transition: all 0.15s;
+  }
+  .filter-tab:hover { background: var(--hover); }
+  .filter-tab.active { background: var(--filter-active-bg); color: var(--filter-active-text); border-color: var(--accent); }
+  .filter-tab .tab-count { font-size: 10px; opacity: 0.7; }
+
+  /* Progress stats */
+  .progress-stats {
+    padding: 8px 12px; font-size: 11px; color: var(--muted);
+    border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: center;
+  }
+  .progress-stats .stat { display: flex; align-items: center; gap: 4px; }
+  .progress-stats .stat-dot { width: 6px; height: 6px; border-radius: 50%; }
 
   /* Main content */
   .main-wrap { flex: 1; overflow: auto; position: relative; }
@@ -215,6 +250,44 @@
   .lesson-pack h4 { font-size: 13px; margin-bottom: 3px; }
   .lesson-pack p { font-size: 12px; color: var(--muted); }
   .lesson-pack .meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  /* Status toggle */
+  .status-toggle { display: flex; gap: 6px; margin: 12px 0; }
+  .status-btn {
+    flex: 1; padding: 8px 12px; border-radius: 8px; cursor: pointer;
+    font-size: 12px; font-weight: 600; text-align: center;
+    border: 2px solid var(--border); background: var(--card); color: var(--text);
+    transition: all 0.15s;
+  }
+  .status-btn:hover { border-color: var(--muted); }
+  .status-btn.active-completed { border-color: var(--status-completed); background: var(--status-completed-bg); color: var(--status-completed); }
+  .status-btn.active-in-progress { border-color: var(--status-inprogress); background: var(--status-inprogress-bg); color: var(--status-inprogress); }
+  .status-btn.active-not-started { border-color: var(--status-notstarted); background: var(--status-notstarted-bg); color: var(--status-notstarted); }
+
+  /* Notes */
+  .notes-area {
+    width: 100%; min-height: 80px; padding: 10px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--card); color: var(--text);
+    font-size: 13px; font-family: inherit; resize: vertical; outline: none;
+    transition: border-color 0.15s;
+  }
+  .notes-area:focus { border-color: var(--accent); }
+  .notes-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .notes-timestamp { font-size: 10px; color: var(--muted); }
+
+  /* Data management */
+  .data-mgmt { padding: 8px 12px; border-top: 1px solid var(--border); display: flex; gap: 6px; flex-wrap: wrap; }
+  .data-btn {
+    padding: 5px 10px; border-radius: 6px; cursor: pointer;
+    font-size: 11px; font-weight: 500; border: 1px solid var(--border);
+    background: var(--card); color: var(--text); transition: all 0.15s;
+  }
+  .data-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .data-btn.danger:hover { border-color: #ef4444; color: #ef4444; }
+
+  /* Animations */
+  .fade-in { animation: fadeIn 0.15s ease-in; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   /* Graph view */
   .graph-wrap {
@@ -299,8 +372,19 @@
 
 <div class="layout" id="mainLayout">
   <aside>
-    <input type="text" id="search" class="search-box" placeholder="Search topics...">
+    <div class="progress-stats" id="progressStats"></div>
+    <input type="text" id="search" class="search-box" placeholder="Search topics... (Ctrl+K)">
+    <div class="filter-tabs" id="filterTabs">
+      <div class="filter-tab active" data-filter="all">All</div>
+      <div class="filter-tab" data-filter="in-progress">In Progress</div>
+      <div class="filter-tab" data-filter="completed">Completed</div>
+    </div>
     <div class="topics-scroll" id="sidebar"></div>
+    <div class="data-mgmt">
+      <button class="data-btn" onclick="exportProgress()">Export</button>
+      <button class="data-btn" onclick="importProgress()">Import</button>
+      <button class="data-btn danger" onclick="resetProgress()">Reset</button>
+    </div>
   </aside>
   <div class="main-wrap" id="mainWrap">
     <div class="empty-state" id="welcome">
@@ -356,6 +440,113 @@ function updateThemeIcon(theme) {
 let currentSlug = 'full-stack';
 let currentView = 'list'; // 'list' or 'graph'
 let selectedTopicId = null;
+let currentStatusFilter = 'all';
+
+// ===== Progress Tracking =====
+const PROGRESS_KEY = 'roadmap_progress';
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(PROGRESS_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveProgress(data) { localStorage.setItem(PROGRESS_KEY, JSON.stringify(data)); }
+function getTopicProgress(nodeId) {
+  const p = loadProgress();
+  return p[nodeId] || { status: 'not-started', notes: '', timestamp: null };
+}
+function setTopicProgress(nodeId, updates) {
+  const p = loadProgress();
+  p[nodeId] = { ...(p[nodeId]||{ status:'not-started', notes:'', timestamp:null }), ...updates };
+  saveProgress(p);
+}
+function getAllProgress() { return loadProgress(); }
+function getProgressStats() {
+  const p = loadProgress();
+  const rd = DATA.roadmaps[currentSlug];
+  let completed = 0, inProgress = 0, total = rd.topics.length;
+  rd.topics.forEach(t => {
+    const s = (p[t.nodeId]||{}).status || 'not-started';
+    if (s === 'completed') completed++;
+    else if (s === 'in-progress') inProgress++;
+  });
+  return { completed, inProgress, total, notStarted: total - completed - inProgress };
+}
+function updateProgressStats() {
+  const stats = getProgressStats();
+  const el = document.getElementById('progressStats');
+  el.innerHTML = '<span class="stat"><span class="stat-dot" style="background:var(--status-completed)"></span>'+stats.completed+'/'+stats.total+' done</span>' +
+    '<span class="stat"><span class="stat-dot" style="background:var(--status-inprogress)"></span>'+stats.inProgress+' in progress</span>';
+}
+function toggleTopicStatus(nodeId) {
+  const current = getTopicProgress(nodeId);
+  const next = current.status === 'not-started' ? 'in-progress' : current.status === 'in-progress' ? 'completed' : 'not-started';
+  setTopicProgress(nodeId, { status: next, timestamp: next === 'completed' ? new Date().toISOString() : current.timestamp });
+  updateProgressStats();
+  buildSidebar(document.getElementById('search').value.trim());
+  if (selectedTopicId === nodeId) selectTopic(nodeId);
+  if (currentView === 'graph') renderGraph();
+}
+function setTopicStatus(nodeId, status) {
+  const prev = getTopicProgress(nodeId);
+  setTopicProgress(nodeId, { status, timestamp: status === 'completed' ? new Date().toISOString() : prev.timestamp });
+  updateProgressStats();
+  buildSidebar(document.getElementById('search').value.trim());
+  if (selectedTopicId === nodeId) selectTopic(nodeId);
+  if (currentView === 'graph') renderGraph();
+}
+function updateNotes(nodeId, notes) { setTopicProgress(nodeId, { notes }); }
+function getStatusColor(status) {
+  if (status === 'completed') return 'var(--status-completed)';
+  if (status === 'in-progress') return 'var(--status-inprogress)';
+  return 'var(--status-notstarted)';
+}
+function getStatusLabel(status) {
+  if (status === 'completed') return 'Completed';
+  if (status === 'in-progress') return 'In Progress';
+  return 'Not Started';
+}
+
+// ===== Export / Import / Reset =====
+function exportProgress() {
+  const data = loadProgress();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'roadmap-progress.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function importProgress() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const imported = JSON.parse(ev.target.result);
+        const existing = loadProgress();
+        // Merge: imported wins on conflicts
+        const merged = { ...existing, ...imported };
+        saveProgress(merged);
+        updateProgressStats();
+        buildSidebar(document.getElementById('search').value.trim());
+        if (selectedTopicId) selectTopic(selectedTopicId);
+        if (currentView === 'graph') renderGraph();
+      } catch(err) { alert('Invalid JSON file'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+function resetProgress() {
+  if (!confirm('Reset ALL progress? This cannot be undone.')) return;
+  localStorage.removeItem(PROGRESS_KEY);
+  updateProgressStats();
+  buildSidebar(document.getElementById('search').value.trim());
+  if (selectedTopicId) selectTopic(selectedTopicId);
+  if (currentView === 'graph') renderGraph();
+}
 
 // ===== Helpers =====
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -408,6 +599,7 @@ function switchRoadmap(slug) {
   selectedTopicId = null;
   buildRoadmapTabs();
   buildSidebar();
+  updateProgressStats();
   showWelcome();
   if (currentView === 'graph') {
     requestAnimationFrame(() => { requestAnimationFrame(() => renderGraph()); });
@@ -460,12 +652,23 @@ function buildSidebar(filter) {
   const sidebar = document.getElementById('sidebar');
   sidebar.innerHTML = '';
   const groups = {};
+  const progress = loadProgress();
   rd.topics.forEach(t => {
     const label = t.title || t.nodeId;
     const phase = getPhase(label);
-    if (filter && !label.toLowerCase().includes(filter.toLowerCase())) return;
+    const pStatus = (progress[t.nodeId]||{}).status || 'not-started';
+    // Search filter
+    if (filter) {
+      const q = filter.toLowerCase();
+      const matchName = label.toLowerCase().includes(q);
+      const matchDesc = (t.description||'').toLowerCase().includes(q);
+      const matchRes = (t.resources||[]).some(r => (r.title||'').toLowerCase().includes(q) || (r.url||'').toLowerCase().includes(q));
+      if (!matchName && !matchDesc && !matchRes) return;
+    }
+    // Status filter
+    if (currentStatusFilter !== 'all' && pStatus !== currentStatusFilter) return;
     if (!groups[phase]) groups[phase] = [];
-    groups[phase].push({ ...t, _label: label, _phase: phase });
+    groups[phase].push({ ...t, _label: label, _phase: phase, _status: pStatus });
   });
   const phaseOrder = ['Frontend','Backend','DevOps','AWS','Checkpoints & Projects','Other'];
   phaseOrder.forEach(phase => {
@@ -478,7 +681,8 @@ function buildSidebar(filter) {
       item.className = 'topic-item' + (t.nodeId === selectedTopicId ? ' active' : '');
       item.dataset.id = t.nodeId;
       const rc = (t.resources||[]).length;
-      item.innerHTML = '<span class="dot" style="background:'+(PHASE_COLORS[phase]||'#64748b')+'"></span><span>'+esc(t._label)+'</span>' + (rc ? '<span class="res-count">'+rc+'</span>' : '');
+      const statusClass = t._status === 'completed' ? 'completed' : t._status === 'in-progress' ? 'in-progress' : 'not-started';
+      item.innerHTML = '<span class="status-dot '+statusClass+'"></span><span>'+esc(t._label)+'</span>' + (rc ? '<span class="res-count">'+rc+'</span>' : '');
       item.addEventListener('click', () => selectTopic(t.nodeId));
       div.appendChild(item);
     });
@@ -501,7 +705,16 @@ function selectTopic(nodeId) {
 
   const label = t.title || nodeId;
   const phase = getPhase(label);
-  let html = '<div class="topic-header"><h2>'+esc(label)+'</h2><span class="phase-badge" style="background:'+PHASE_COLORS[phase]+'22;color:'+PHASE_COLORS[phase]+'">'+esc(phase)+'</span></div>';
+  const progress = getTopicProgress(nodeId);
+  let html = '<div class="topic-header fade-in"><h2>'+esc(label)+'</h2><span class="phase-badge" style="background:'+PHASE_COLORS[phase]+'22;color:'+PHASE_COLORS[phase]+'">'+esc(phase)+'</span></div>';
+
+  // Status toggle
+  const s = progress.status;
+  html += '<div class="status-toggle fade-in">';
+  html += '<button class="status-btn'+(s==='not-started'?' active-not-started':'')+'" onclick="setTopicStatus(\''+esc(nodeId)+'\',\'not-started\')">&#9675; Not Started</button>';
+  html += '<button class="status-btn'+(s==='in-progress'?' active-in-progress':'')+'" onclick="setTopicStatus(\''+esc(nodeId)+'\',\'in-progress\')">&#9654; In Progress</button>';
+  html += '<button class="status-btn'+(s==='completed'?' active-completed':'')+'" onclick="setTopicStatus(\''+esc(nodeId)+'\',\'completed\')">&#10003; Completed</button>';
+  html += '</div>';
 
   if (t.description) {
     html += '<div class="card"><h3>&#128214; Overview</h3><div class="description">'+renderMarkdown(t.description)+'</div></div>';
@@ -530,6 +743,9 @@ function selectTopic(nodeId) {
   if (!t.description && (!t.resources || t.resources.length === 0)) {
     html += '<div class="empty-state" style="padding:40px"><p>No content available for this item.</p></div>';
   }
+  // Notes
+  html += '<div class="card fade-in"><div class="notes-label"><span>&#128221; Notes</span>' + (progress.timestamp ? '<span class="notes-timestamp">Completed: '+new Date(progress.timestamp).toLocaleDateString()+'</span>' : '') + '</div>';
+  html += '<textarea class="notes-area" placeholder="Add notes about this topic..." oninput="updateNotes(\''+esc(nodeId)+'\',this.value)">'+esc(progress.notes||'')+'</textarea></div>';
   content.innerHTML = html;
   content.scrollTop = 0;
   document.getElementById('mainWrap').scrollTop = 0;
@@ -545,6 +761,36 @@ function showWelcome() {
 
 // ===== Search =====
 document.getElementById('search').addEventListener('input', e => buildSidebar(e.target.value.trim()));
+
+// ===== Filter Tabs =====
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    currentStatusFilter = tab.dataset.filter;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    buildSidebar(document.getElementById('search').value.trim());
+  });
+});
+
+// ===== Keyboard Shortcuts =====
+document.addEventListener('keydown', e => {
+  // Ctrl+K or / to focus search
+  if ((e.ctrlKey && e.key === 'k') || (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA')) {
+    e.preventDefault();
+    document.getElementById('search').focus();
+  }
+  // Escape to close detail / blur search
+  if (e.key === 'Escape') {
+    document.getElementById('search').blur();
+    if (selectedTopicId) { selectedTopicId = null; showWelcome(); buildSidebar(document.getElementById('search').value.trim()); }
+  }
+  // 1/2/3 to set status when a topic is selected
+  if (selectedTopicId && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    if (e.key === '1') setTopicStatus(selectedTopicId, 'not-started');
+    if (e.key === '2') setTopicStatus(selectedTopicId, 'in-progress');
+    if (e.key === '3') setTopicStatus(selectedTopicId, 'completed');
+  }
+});
 
 // ===== Graph Rendering =====
 let graphScale = 1, graphPanX = 0, graphPanY = 0, isPanning = false, panStartX = 0, panStartY = 0, panMouseDownX = 0, panMouseDownY = false;
@@ -631,10 +877,17 @@ function renderGraph() {
   });
 
   // Nodes on top of edges
+  const progress = loadProgress();
   renderable.forEach(n => {
     const s = sizeMap[n.id];
-    const fill = nodeFills[n.type] || nodeFills.default;
-    const stroke = nodeStrokes[n.type] || nodeStrokes.default;
+    const pStatus = (progress[n.id]||{}).status || 'not-started';
+    // Status-based coloring for clickable nodes
+    let fill = nodeFills[n.type] || nodeFills.default;
+    let stroke = nodeStrokes[n.type] || nodeStrokes.default;
+    if (n.type === 'topic' || n.type === 'subtopic' || n.type === 'button') {
+      if (pStatus === 'completed') { fill = cs.getPropertyValue('--status-completed-bg').trim() || '#dcfce7'; stroke = cs.getPropertyValue('--status-completed').trim() || '#16a34a'; }
+      else if (pStatus === 'in-progress') { fill = cs.getPropertyValue('--status-inprogress-bg').trim() || '#fef3c7'; stroke = cs.getPropertyValue('--status-inprogress').trim() || '#f59e0b'; }
+    }
     const labelClass = n.type==='title'?'node-title':n.type==='paragraph'?'node-paragraph':n.type==='section'?'node-label-text':'node-label';
     const isClickable = n.type==='topic'||n.type==='subtopic'||n.type==='button';
     const nodeId = n.id;
@@ -715,6 +968,7 @@ svgEl.addEventListener('mouseout', e => {
 // ===== Init =====
 buildRoadmapTabs();
 buildSidebar();
+updateProgressStats();
 </script>
 </body>
 </html>
