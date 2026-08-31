@@ -572,8 +572,9 @@ document.getElementById('homeSearch').addEventListener('input',e=>{
 });
 
 // ===== Open Roadmap =====
-async function openRoadmap(slug){
+async function openRoadmap(slug,pushState){
   currentPage='roadmap';currentSlug=slug;selectedTopicId=null;currentView='list';
+  if(pushState!==false)history.pushState({slug},'','#'+slug);
   document.getElementById('homePage').style.display='none';
   document.getElementById('roadmapView').style.display='flex';
   // Set dynamic accent
@@ -601,8 +602,9 @@ async function openRoadmap(slug){
   document.getElementById('graphWrap').style.display='none';
   document.getElementById('mainContent').style.display='flex';
 }
-function goHome(){
+function goHome(pushState){
   currentPage='home';currentSlug=null;selectedTopicId=null;
+  if(pushState!==false)history.pushState({page:'home'},'','#');
   document.getElementById('homePage').style.display='block';
   document.getElementById('roadmapView').style.display='none';
   document.getElementById('breadcrumbs').style.display='none';
@@ -681,11 +683,12 @@ function updateProgressStats(){
 }
 
 // ===== Topic Detail =====
-function selectTopic(nid){
+function selectTopic(nid,pushState){
   if(!currentSlug)return;
   const rd=DATA_CACHE[currentSlug];if(!rd)return;
   const t=rd.topics.find(x=>x.nodeId===nid);
   if(!t)return;selectedTopicId=nid;
+  if(pushState!==false)history.pushState({slug:currentSlug,topicId:nid},''','#'+currentSlug+'/'+nid);
   
   // Save last viewed
   saveLastViewed(currentSlug,nid,t.title||nid);
@@ -947,8 +950,49 @@ function resetProgress(){
     return;
   }
   await loadProjects();
+  // Route from hash on load
+  routeFromHash();
   buildHome();
 })();
+
+// ===== Hash-based routing =====
+function routeFromHash(){
+  const hash=location.hash.replace(/^#/,'');
+  if(!hash){goHome(false);return}
+  const parts=hash.split('/');
+  const slug=parts[0];
+  if(!INDEX.meta||!INDEX.meta[slug]){goHome(false);return}
+  openRoadmap(slug,false).then(()=>{
+    if(parts[1]){
+      setTimeout(()=>selectTopic(parts[1],false),100);
+    }
+  });
+}
+window.addEventListener('popstate',e=>{
+  const hash=location.hash.replace(/^#/,'');
+  if(!hash){
+    goHome(false);
+    return;
+  }
+  const parts=hash.split('/');
+  const slug=parts[0];
+  if(!INDEX.meta||!INDEX.meta[slug]){goHome(false);return}
+  // If we're already on this roadmap, just navigate to topic
+  if(currentSlug===slug&&currentPage==='roadmap'){
+    if(parts[1]){
+      selectTopic(parts[1],false);
+    }else{
+      showWelcome();selectedTopicId=null;
+      buildSidebar(document.getElementById('topicSearch').value.trim());
+    }
+  }else{
+    openRoadmap(slug,false).then(()=>{
+      if(parts[1]){
+        setTimeout(()=>selectTopic(parts[1],false),100);
+      }
+    });
+  }
+});
 </script>
 </body>
 </html>
