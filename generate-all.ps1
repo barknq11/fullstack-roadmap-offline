@@ -6,13 +6,13 @@ $roadmapSlugs = @(
   # Original role-based
   'full-stack','frontend','backend','devops','aws',
   # Absolute Beginners
-  'frontend-beginner','backend-beginner','devops-beginner','git-github-beginner',
+  'frontend-beginner','backend-beginner','devops-beginner',
   # Languages / Platforms
-  'python','python-data-analysis','sql','javascript','typescript','nodejs',
+  'python','sql','javascript','typescript','nodejs',
   'java','cpp','rust','golang','php','kotlin',
-  'html','css','swift-ui','shell-bash',
+  'swift-ui',
   # Frameworks
-  'laravel','django','ruby','ruby-on-rails'
+  'ruby-on-rails'
 )
 $roadmapMeta = @{
   # Original
@@ -25,10 +25,8 @@ $roadmapMeta = @{
   'frontend-beginner'    = @{ color='#3b82f6'; icon='FB'; title='Frontend Beginner' }
   'backend-beginner'     = @{ color='#22c55e'; icon='BB'; title='Backend Beginner' }
   'devops-beginner'      = @{ color='#f97316'; icon='DB'; title='DevOps Beginner' }
-  'git-github-beginner'  = @{ color='#8b5cf6'; icon='GB'; title='Git & GitHub Beginner' }
   # Languages / Platforms
   'python'               = @{ color='#3776ab'; icon='PY'; title='Python' }
-  'python-data-analysis' = @{ color='#ff6f00'; icon='PD'; title='Python for Data Analysis' }
   'sql'                  = @{ color='#e38c00'; icon='SQ'; title='SQL' }
   'javascript'           = @{ color='#f7df1e'; icon='JS'; title='JavaScript' }
   'typescript'           = @{ color='#3178c6'; icon='TS'; title='TypeScript' }
@@ -39,28 +37,42 @@ $roadmapMeta = @{
   'golang'               = @{ color='#00add8'; icon='GO'; title='Go' }
   'php'                  = @{ color='#777bb4'; icon='PH'; title='PHP' }
   'kotlin'               = @{ color='#7f52ff'; icon='KT'; title='Kotlin' }
-  'html'                 = @{ color='#e34c26'; icon='HT'; title='HTML' }
-  'css'                  = @{ color='#1572b6'; icon='CS'; title='CSS' }
   'swift-ui'             = @{ color='#fa7343'; icon='SW'; title='Swift & SwiftUI' }
-  'shell-bash'           = @{ color='#4eaa25'; icon='SH'; title='Shell / Bash' }
   # Frameworks
-  'laravel'              = @{ color='#ff2d20'; icon='LV'; title='Laravel' }
-  'django'               = @{ color='#092e20'; icon='DJ'; title='Django' }
-  'ruby'                 = @{ color='#cc342d'; icon='RB'; title='Ruby' }
   'ruby-on-rails'        = @{ color='#cc0000'; icon='RR'; title='Ruby on Rails' }
 }
 
-# Load all roadmap data + topics
+# Load shared topic details (all in data/topics/)
+$sharedTopicDir = Join-Path $base "data\topics"
+$sharedTopics = @{}
+if (Test-Path $sharedTopicDir) {
+  foreach ($file in Get-ChildItem (Join-Path $sharedTopicDir '*.json')) {
+    try {
+      $t = Get-Content $file.FullName -Raw | ConvertFrom-Json
+      if ($t.nodeId) { $sharedTopics[$t.nodeId] = $t }
+    } catch {}
+  }
+}
+Write-Host "Loaded $($sharedTopics.Count) shared topic detail files"
+
+# Load all roadmap data + match topics
 $allData = @{}
 foreach ($slug in $roadmapSlugs) {
   $rJson = Get-Content (Join-Path $base "data\$slug\roadmap.json") -Raw | ConvertFrom-Json
-  $topicDir = Join-Path $base "data\$slug\topics"
+  # Also check per-slug topics dir (legacy)
+  $slugTopicDir = Join-Path $base "data\$slug\topics"
   $topics = @()
-  if (Test-Path $topicDir) {
-    foreach ($file in Get-ChildItem (Join-Path $topicDir '*.json')) {
-      $t = Get-Content $file.FullName -Raw | ConvertFrom-Json
-      $topics += $t
+  # Collect topic node IDs from this roadmap
+  foreach ($node in $rJson.nodes) {
+    if ($node.type -ne 'topic' -and $node.type -ne 'subtopic') { continue }
+    $nodeId = $node.id
+    $detail = $null
+    if ($sharedTopics.ContainsKey($nodeId)) { $detail = $sharedTopics[$nodeId] }
+    elseif (Test-Path $slugTopicDir) {
+      $slugFile = Join-Path $slugTopicDir "$nodeId.json"
+      if (Test-Path $slugFile) { try { $detail = Get-Content $slugFile -Raw | ConvertFrom-Json } catch {} }
     }
+    if ($detail) { $topics += $detail }
   }
   $allData[$slug] = @{
     roadmap = $rJson
@@ -86,9 +98,8 @@ foreach ($slug in $roadmapSlugs) {
         id     = $n.id
         type   = $n.type
         label  = $n.data.label
-        x      = $n.position.x
-        y      = $n.position.y
-        href   = $n.data.href
+        x      = [math]::Round($n.position.x, 0)
+        y      = [math]::Round($n.position.y, 0)
       }
     }
   }
@@ -102,7 +113,7 @@ foreach ($slug in $roadmapSlugs) {
       }
     }
   }
-  # Build topics array
+  # Build topics array (optimized: trim descriptions, limit resources)
   $topicsArr = @()
   foreach ($t in $rd.topics) {
     $label = ''
@@ -113,14 +124,17 @@ foreach ($slug in $roadmapSlugs) {
     }
     # Skip buttons (links to other roadmaps) and decorative nodes
     if ($nodeType -eq 'button' -or $nodeType -eq 'horizontal' -or $nodeType -eq 'vertical' -or $nodeType -eq 'label') { continue }
-    $topicsArr += @{
+    # Trim description to 300 chars max
+    $desc = if ($t.description) { if ($t.description.Length -gt 300) { $t.description.Substring(0,300) + '...' } else { $t.description } } else { '' }
+    # Limit resources to 4
+    $res = if ($t.resources) { $t.resources | Select-Object -First 4 } else { @() }
+    $topicObj = @{
       nodeId      = $t.nodeId
       title       = $label
-      description = $t.description
-      resources   = $t.resources
-      lessonPacks = $t.lessonPacks
-      paidResources = $t.paidResources
+      description = $desc
+      resources   = $res
     }
+    $topicsArr += $topicObj
   }
 
   $payload.roadmaps[$slug] = @{
