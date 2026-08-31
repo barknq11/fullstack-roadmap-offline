@@ -33,6 +33,39 @@ $roadmapMeta = @{
   'ruby-on-rails'        = @{ color='#cc0000'; icon='RR'; title='Ruby on Rails' }
 }
 
+# Topological sort function (Kahn's algorithm)
+function Invoke-TopologicalSort {
+  param([hashtable]$Nodes, [array]$Edges)
+  
+  $inDegree = @{}
+  $adj = @{}
+  foreach ($id in $Nodes.Keys) { $inDegree[$id] = 0; $adj[$id] = @() }
+  foreach ($e in $Edges) {
+    if ($inDegree.ContainsKey($e.target)) { $inDegree[$e.target]++ }
+    if ($adj.ContainsKey($e.source)) { $adj[$e.source] += $e.target }
+  }
+  
+  $queue = [System.Collections.Queue]::new()
+  foreach ($id in $Nodes.Keys) { if ($inDegree[$id] -eq 0) { $queue.Enqueue($id) } }
+  
+  $sorted = @()
+  while ($queue.Count -gt 0) {
+    $current = $queue.Dequeue()
+    $sorted += $current
+    foreach ($next in $adj[$current]) {
+      $inDegree[$next]--
+      if ($inDegree[$next] -eq 0) { $queue.Enqueue($next) }
+    }
+  }
+  
+  # Add orphans (disconnected nodes) alphabetically
+  foreach ($id in ($Nodes.Keys | Sort-Object { $Nodes[$_].label })) {
+    if ($sorted -notcontains $id) { $sorted += $id }
+  }
+  
+  return $sorted
+}
+
 # Load shared topic details
 $sharedTopicDir = Join-Path $base "data\topics"
 $sharedTopics = @{}
@@ -54,13 +87,17 @@ foreach ($slug in $roadmapSlugs) {
   $rJson = Get-Content (Join-Path $base "data\$slug\roadmap.json") -Raw | ConvertFrom-Json
   $slugTopicDir = Join-Path $base "data\$slug\topics"
   
-  # Build node map
+  # Build node map (only topic/subtopic nodes for sorting)
   $nodeMap = @{}
+  $topicNodes = @{}
   foreach ($n in $rJson.nodes) {
     if ($n.data.label) {
       $nodeMap[$n.id] = @{
         id = $n.id; type = $n.type; label = $n.data.label
         x = [math]::Round($n.position.x, 0); y = [math]::Round($n.position.y, 0)
+      }
+      if ($n.type -eq 'topic' -or $n.type -eq 'subtopic') {
+        $topicNodes[$n.id] = $nodeMap[$n.id]
       }
     }
   }
@@ -73,25 +110,61 @@ foreach ($slug in $roadmapSlugs) {
     }
   }
   
-  # Build topics (match by nodeId from roadmap nodes)
+  # Topological sort for ordering
+  $sortedIds = Invoke-TopologicalSort -Nodes $topicNodes -Edges $edgeList
+  
+  # Build prerequisite/leadsTo maps from edges
+  $prereqMap = @{}  # target -> [sources]
+  $leadsToMap = @{} # source -> [targets]
+  foreach ($id in $topicNodes.Keys) { $prereqMap[$id] = @(); $leadsToMap[$id] = @() }
+  foreach ($e in $edgeList) {
+    if ($topicNodes.ContainsKey($e.source) -and $topicNodes.ContainsKey($e.target)) {
+      $prereqMap[$e.target] += $e.source
+      $leadsToMap[$e.source] += $e.target
+    }
+  }
+  
+  # Build topics with full descriptions, prerequisites, leadsTo, and order
   $topicsArr = @()
-  foreach ($node in $rJson.nodes) {
-    if ($node.type -ne 'topic' -and $node.type -ne 'subtopic') { continue }
-    $nodeId = $node.id
+  $orderIndex = 0
+  foreach ($nodeId in $sortedIds) {
     $detail = $null
     if ($sharedTopics.ContainsKey($nodeId)) { $detail = $sharedTopics[$nodeId] }
     elseif (Test-Path $slugTopicDir) {
       $slugFile = Join-Path $slugTopicDir "$nodeId.json"
       if (Test-Path $slugFile) { try { $detail = Get-Content $slugFile -Raw | ConvertFrom-Json } catch {} }
     }
-    $label = $nodeMap[$nodeId].label
+    $label = $topicNodes[$nodeId].label
     $desc = ''
+    $fullDesc = ''
     $res = @()
     if ($detail) {
-      $desc = if ($detail.description) { if ($detail.description.Length -gt 300) { $detail.description.Substring(0,300) + '...' } else { $detail.description } } else { '' }
+      $fullDesc = if ($detail.description) { $detail.description } else { '' }
+      $desc = if ($fullDesc.Length -gt 300) { $fullDesc.Substring(0,300) + '...' } else { $fullDesc }
       $res = if ($detail.resources) { $detail.resources | Select-Object -First 4 } else { @() }
     }
-    $topicsArr += @{ nodeId = $nodeId; title = $label; description = $desc; resources = $res }
+    
+    # Resolve prerequisite/leadsTo nodeIds to labels
+    $prereqLabels = @()
+    foreach ($prereqId in $prereqMap[$nodeId]) {
+      if ($topicNodes.ContainsKey($prereqId)) { $prereqLabels += @{ nodeId = $prereqId; title = $topicNodes[$prereqId].label } }
+    }
+    $leadsToLabels = @()
+    foreach ($leadsToId in $leadsToMap[$nodeId]) {
+      if ($topicNodes.ContainsKey($leadsToId)) { $leadsToLabels += @{ nodeId = $leadsToId; title = $topicNodes[$leadsToId].label } }
+    }
+    
+    $topicsArr += @{
+      nodeId = $nodeId
+      title = $label
+      description = $desc
+      fullDescription = $fullDesc
+      resources = $res
+      prerequisites = $prereqLabels
+      leadsTo = $leadsToLabels
+      order = $orderIndex
+    }
+    $orderIndex++
   }
   
   $index.counts[$slug] = $topicsArr.Count

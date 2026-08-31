@@ -165,9 +165,61 @@ svg.roadmap-svg .node-label-text{font-size:11px;fill:var(--muted);pointer-events
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .fade-in{animation:fadeIn .2s ease}
 
+/* Badge dots on roadmap cards */
+.badge-dot{position:absolute;top:12px;right:12px;width:14px;height:14px;border-radius:50%;border:2px solid var(--border);transition:all .3s}
+.badge-dot.bronze{background:#CD7F32;border-color:#CD7F32}
+.badge-dot.silver{background:#C0C0C0;border-color:#C0C0C0}
+.badge-dot.gold{background:#FFD700;border-color:#FFD700}
+.badge-dot.platinum{background:#E5E4E2;border-color:#E5E4E2}
+@keyframes badgePulse{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+.badge-dot.animate{animation:badgePulse .3s ease}
+
+/* Continue where you left off */
+.continue-banner{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.continue-banner:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);border-color:var(--accent)}
+.continue-icon{width:44px;height:44px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0}
+.continue-info{flex:1;min-width:0}
+.continue-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px}
+.continue-title{font-size:15px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.continue-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.continue-arrow{font-size:18px;color:var(--muted);flex-shrink:0}
+
+/* Sidebar last-viewed */
+.sidebar-lastviewed{padding:10px 16px;border-bottom:1px solid var(--border);font-size:12px;color:var(--muted);cursor:pointer;transition:background .15s}
+.sidebar-lastviewed:hover{background:var(--hover)}
+.sidebar-lastviewed strong{color:var(--accent);font-weight:600}
+
+/* Prerequisite/LeadsTo lists */
+.dep-section{margin-bottom:16px}
+.dep-section h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.dep-list{display:flex;flex-wrap:wrap;gap:6px}
+.dep-tag{padding:4px 10px;border-radius:16px;font-size:11px;font-weight:600;background:var(--hover);color:var(--text);border:1px solid var(--border);cursor:pointer;transition:all .15s;text-decoration:none}
+.dep-tag:hover{border-color:var(--accent);color:var(--accent)}
+.dep-tag.prereq{background:var(--badge-article-bg);color:var(--badge-article-text);border-color:transparent}
+.dep-tag.next{background:var(--badge-official-bg);color:var(--badge-official-text);border-color:transparent}
+
+/* Expandable description */
+.desc-toggle{display:inline-block;margin-top:8px;font-size:12px;font-weight:600;color:var(--accent);cursor:pointer;transition:color .15s}
+.desc-toggle:hover{color:var(--accent-dark)}
+
+/* Project suggestions */
+.project-section{margin-top:20px}
+.project-section h3{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.project-card{background:var(--hover);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;transition:all .15s}
+.project-card:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.project-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.project-desc{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5}
+.project-meta{display:flex;gap:8px;flex-wrap:wrap}
+.project-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:var(--badge-course-bg);color:var(--badge-course-text)}
+.project-difficulty{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+.project-difficulty.beginner{background:var(--status-completed-bg);color:var(--status-completed)}
+.project-difficulty.intermediate{background:var(--status-inprogress-bg);color:var(--status-inprogress)}
+.project-difficulty.advanced{background:var(--badge-video-bg);color:var(--badge-video-text)}
+.project-time{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:3px}
+
 /* Responsive */
 @media(max-width:900px){.sidebar{width:280px;min-width:280px}.sidebar-collapse-btn{left:280px}.main-content{padding:20px}.search-global{flex:0 0 200px}}
-@media(max-width:700px){.view-wrap{flex-direction:column;height:auto}.sidebar{width:100%;min-width:0;max-height:40vh;border-right:none;border-bottom:1px solid var(--border)}.sidebar.collapsed{max-height:0}.sidebar-collapse-btn{display:none}.card-grid{grid-template-columns:1fr}.home-wrap{padding:20px 16px}.header-row{padding:10px 0 6px}.search-global{flex:0 0 160px}.main-content{padding:16px}}
+@media(max-width:700px){.view-wrap{flex-direction:column;height:auto}.sidebar{width:100%;min-width:0;max-height:40vh;border-right:none;border-bottom:1px solid var(--border)}.sidebar.collapsed{max-height:0}.sidebar-collapse-btn{display:none}.card-grid{grid-template-columns:1fr}.home-wrap{padding:20px 16px}.header-row{padding:10px 0 6px}.search-global{flex:0 0 160px}.main-content{padding:16px}.continue-banner{flex-direction:column;text-align:center}}
 </style>
 </head>
 <body>
@@ -192,12 +244,14 @@ svg.roadmap-svg .node-label-text{font-size:11px;fill:var(--muted);pointer-events
 <div class="home-wrap" id="homePage">
   <div class="home-title">Choose Your Path</div>
   <div class="home-subtitle">21 developer roadmaps with interactive graphs, progress tracking, and curated resources.</div>
+  <div id="continueBanner" style="display:none"></div>
   <div id="cardGrid"></div>
 </div>
 
 <!-- ROADMAP VIEW -->
 <div class="view-wrap" id="roadmapView" style="display:none">
   <div class="sidebar" id="sidebar">
+    <div class="sidebar-lastviewed" id="sidebarLastViewed" style="display:none"></div>
     <div class="sidebar-header">
       <div class="progress-stats" id="progressStats"></div>
       <div class="filter-row" id="filterRow">
@@ -278,6 +332,48 @@ function getRoadmapProgress(slug){
   return{completed:c,inProgress:ip,total:rd.topics.length}
 }
 
+// ===== Last Viewed =====
+const LVK='roadmap_lastviewed';
+function getLastViewed(){try{return JSON.parse(localStorage.getItem(LVK))||{}}catch(e){return{}}}
+function saveLastViewed(slug,topicId,topicTitle){
+  const lv=getLastViewed();lv[slug]={topicId,topicTitle,timestamp:Date.now()};localStorage.setItem(LVK,JSON.stringify(lv));
+}
+function getLastViewedForSlug(slug){const lv=getLastViewed();return lv[slug]||null}
+
+// ===== Badges =====
+const BK='roadmap_badges';
+function loadBadges(){try{return JSON.parse(localStorage.getItem(BK))||{}}catch(e){return{}}}
+function saveBadges(d){localStorage.setItem(BK,JSON.stringify(d))}
+function getBadgeLevel(slug){
+  const rd=DATA_CACHE[slug];if(!rd)return null;
+  const prog=getRoadmapProgress(slug);if(prog.total===0)return null;
+  const pct=prog.completed/prog.total*100;
+  if(pct>=100)return'platinum';if(pct>=75)return'gold';if(pct>=50)return'silver';if(pct>=25)return'bronze';return null;
+}
+function checkAndAwardBadge(slug){
+  const badges=loadBadges();const level=getBadgeLevel(slug);if(!level)return false;
+  const prev=badges[slug]||{};const wasEarned=prev[level]||false;
+  if(!wasEarned){badges[slug]={...prev,[level]:true};saveBadges(badges);return true}
+  return false;
+}
+
+// ===== Projects =====
+let PROJECTS=null;
+async function loadProjects(){
+  if(PROJECTS)return PROJECTS;
+  try{const r=await fetch('data/web/projects.json');PROJECTS=await r.json();return PROJECTS}catch(e){return[]}
+}
+function getRelevantProjects(slug){
+  if(!PROJECTS||!DATA_CACHE[slug])return[];
+  const rd=DATA_CACHE[slug];const p=loadProgress();
+  const completedTopics=new Set();
+  rd.topics.forEach(t=>{if((p[t.nodeId]||{}).status==='completed')completedTopics.add(t.nodeId)});
+  return PROJECTS.filter(proj=>{
+    return proj.topics.some(pt=>rd.topics.some(t=>t.title&&t.title.toLowerCase().includes(pt.toLowerCase()))||
+      rd.topics.some(t=>completedTopics.has(t.nodeId)&&t.title&&t.title.toLowerCase().includes(pt.toLowerCase())));
+  }).slice(0,3);
+}
+
 // ===== Helpers =====
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function renderMarkdown(md){
@@ -332,6 +428,10 @@ function buildHome(){
   const grid=document.getElementById('cardGrid');
   grid.innerHTML='';
   if(!INDEX)return;
+  
+  // Continue where you left off banner
+  buildContinueBanner();
+  
   CAT_ORDER.forEach(cat=>{
     const slugs=CATEGORIES[cat];if(!slugs||!slugs.length)return;
     const sec=document.createElement('div');sec.className='category-section';
@@ -343,14 +443,32 @@ function buildHome(){
       const prog=getRoadmapProgress(slug);
       const topicCount=rd?rd.topics.length:meta.topicCount||0;
       const pct=topicCount>0?Math.round(prog.completed/topicCount*100):0;
+      const badge=getBadgeLevel(slug);
+      const badgeHtml=badge?'<div class="badge-dot '+badge+'" title="'+badge.charAt(0).toUpperCase()+badge.slice(1)+' badge"></div>':'';
       const card=document.createElement('div');card.className='roadmap-card';
       card.style.setProperty('--card-accent',meta.color);
-      card.innerHTML='<div class="card-header"><div class="card-icon" style="background:'+meta.color+'">'+esc(meta.icon)+'</div><div class="card-title">'+esc(meta.title)+'</div></div><div class="card-meta"><span class="topic-count">'+topicCount+' topics</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+meta.color+'"></div></div><div class="card-progress">'+prog.completed+'/'+topicCount+' completed ('+pct+'%)</div>';
+      card.innerHTML=badgeHtml+'<div class="card-header"><div class="card-icon" style="background:'+meta.color+'">'+esc(meta.icon)+'</div><div class="card-title">'+esc(meta.title)+'</div></div><div class="card-meta"><span class="topic-count">'+topicCount+' topics</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+meta.color+'"></div></div><div class="card-progress">'+prog.completed+'/'+topicCount+' completed ('+pct+'%)</div>';
       card.addEventListener('click',()=>openRoadmap(slug));
       row.appendChild(card);
     });
     sec.appendChild(row);grid.appendChild(sec);
   });
+}
+
+function buildContinueBanner(){
+  const banner=document.getElementById('continueBanner');
+  const lv=getLastViewed();
+  // Find most recent last-viewed across all slugs
+  let mostRecent=null;let mostRecentSlug=null;
+  for(const slug in lv){
+    if(!mostRecent||lv[slug].timestamp>mostRecent.timestamp){mostRecent=lv[slug];mostRecentSlug=slug}
+  }
+  if(!mostRecent||!mostRecentSlug){banner.style.display='none';return}
+  const meta=INDEX.meta[mostRecentSlug];if(!meta){banner.style.display='none';return}
+  const prog=getRoadmapProgress(mostRecentSlug);
+  const pct=prog.total>0?Math.round(prog.completed/prog.total*100):0;
+  banner.style.display='block';
+  banner.innerHTML='<div class="continue-banner" onclick="openRoadmap(\''+esc(mostRecentSlug)+'\');setTimeout(()=>selectTopic(\''+esc(mostRecent.topicId)+'\'),200)"><div class="continue-icon" style="background:'+meta.color+'">'+esc(meta.icon)+'</div><div class="continue-info"><div class="continue-label">Continue where you left off</div><div class="continue-title">'+esc(meta.title)+' &mdash; '+esc(mostRecent.topicTitle)+'</div><div class="continue-meta">'+prog.completed+'/'+prog.total+' completed ('+pct+'%)</div></div><div class="continue-arrow">&#9654;</div></div>';
 }
 
 // ===== Open Roadmap =====
@@ -373,6 +491,11 @@ async function openRoadmap(slug){
   buildViewTabs();
   buildSidebar();
   updateProgressStats();
+  // Sidebar last-viewed
+  const lv=getLastViewedForSlug(slug);
+  const lvEl=document.getElementById('sidebarLastViewed');
+  if(lv){lvEl.style.display='block';lvEl.innerHTML='Last viewed: <strong>'+esc(lv.topicTitle)+'</strong>';lvEl.onclick=()=>selectTopic(lv.topicId)}
+  else{lvEl.style.display='none'}
   showWelcome();
   // Reset graph state
   document.getElementById('graphWrap').style.display='none';
@@ -457,9 +580,14 @@ function selectTopic(nid){
   const rd=DATA_CACHE[currentSlug];if(!rd)return;
   const t=rd.topics.find(x=>x.nodeId===nid);
   if(!t)return;selectedTopicId=nid;
+  
+  // Save last viewed
+  saveLastViewed(currentSlug,nid,t.title||nid);
+  
   document.querySelectorAll('.topic-item').forEach(el=>el.classList.remove('active'));
   const act=document.querySelector('.topic-item[data-id="'+nid+'"]');if(act){act.classList.add('active');act.scrollIntoView({block:'nearest'})}
   document.getElementById('welcomeScreen').style.display='none';
+  document.getElementById('sidebarLastViewed').style.display='none';
   const det=document.getElementById('topicDetail');det.style.display='block';
   const label=t.title||nid;const phase=getPhase(label);const prog=getTopicProgress(nid);
   let html='<div class="topic-header fade-in"><h2>'+esc(label)+'</h2><span class="phase-badge" style="background:'+(PHASE_COLORS[phase]||'#64748b')+'22;color:'+(PHASE_COLORS[phase]||'#64748b')+'">'+esc(phase)+'</span></div>';
@@ -470,17 +598,69 @@ function selectTopic(nid){
   html+='<button class="sbtn'+(s==='in-progress'?' active-ip':'')+'" onclick="setTopicStatus(\''+esc(nid)+'\',\'in-progress\')">&#9654; In Progress</button>';
   html+='<button class="sbtn'+(s==='completed'?' active-c':'')+'" onclick="setTopicStatus(\''+esc(nid)+'\',\'completed\')">&#10003; Completed</button>';
   html+='</div>';
-  if(t.description){html+='<div class="content-card"><h3>&#128214; Overview</h3><div class="desc">'+renderMarkdown(t.description)+'</div></div>'}
+  // Prerequisites
+  if(t.prerequisites&&t.prerequisites.length){
+    html+='<div class="dep-section fade-in"><h4>&#128279; Prerequisites ('+t.prerequisites.length+')</h4><div class="dep-list">';
+    t.prerequisites.forEach(p=>{html+='<span class="dep-tag prereq" onclick="selectTopic(\''+esc(p.nodeId)+'\')">'+esc(p.title)+'</span>'});
+    html+='</div></div>';
+  }
+  // Description (expandable)
+  if(t.fullDescription||t.description){
+    const full=t.fullDescription||t.description;
+    const short=t.description||'';
+    const isExpandable=full.length>short.length&&full.length>300;
+    html+='<div class="content-card fade-in"><h3>&#128214; Overview</h3>';
+    if(isExpandable){
+      html+='<div class="desc" id="descContent">'+renderMarkdown(short)+'</div>';
+      html+='<span class="desc-toggle" id="descToggle" onclick="toggleDescription()">Show full description &#9660;</span>';
+    }else{
+      html+='<div class="desc">'+renderMarkdown(full)+'</div>';
+    }
+    html+='</div>';
+  }
+  // Leads to
+  if(t.leadsTo&&t.leadsTo.length){
+    html+='<div class="dep-section fade-in"><h4>&#10148; Next Topics ('+t.leadsTo.length+')</h4><div class="dep-list">';
+    t.leadsTo.forEach(l=>{html+='<span class="dep-tag next" onclick="selectTopic(\''+esc(l.nodeId)+'\')">'+esc(l.title)+'</span>'});
+    html+='</div></div>';
+  }
   if(t.resources&&t.resources.length){
-    html+='<div class="content-card"><h3>&#127891; Free Resources ('+t.resources.length+')</h3><ul class="resource-list">';
+    html+='<div class="content-card fade-in"><h3>&#127891; Free Resources ('+t.resources.length+')</h3><ul class="resource-list">';
     t.resources.forEach(r=>{html+='<li><a class="resource-link" href="'+esc(r.url)+'" target="_blank" rel="noopener"><span class="res-type '+typeClass(r.type)+'">'+esc(typeLabel(r.type))+'</span><span class="res-title">'+esc(r.title)+'</span></a></li>'});
     html+='</ul></div>';
   }
   if(!t.description&&(!t.resources||!t.resources.length)){html+='<div class="content-card" style="text-align:center;padding:40px;color:var(--muted)"><p>No content available for this item.</p></div>'}
+  // Project suggestions
+  html+='<div id="projectSuggestions"></div>';
   html+='<div class="content-card fade-in"><div class="notes-label"><span>&#128221; Notes</span>'+(prog.timestamp?'<span class="notes-timestamp">Completed: '+new Date(prog.timestamp).toLocaleDateString()+'</span>':'')+'</div><textarea class="notes-area" placeholder="Add notes about this topic..." oninput="updateNotes(\''+esc(nid)+'\',this.value)">'+esc(prog.notes||'')+'</textarea></div>';
   det.innerHTML=html;det.scrollTop=0;
   document.getElementById('mainContent').scrollTop=0;
   highlightGraphNode(nid);
+  // Load project suggestions
+  loadProjectSuggestions();
+}
+let _expandedDesc=false;
+function toggleDescription(){
+  const rd=DATA_CACHE[currentSlug];if(!rd||!selectedTopicId)return;
+  const t=rd.topics.find(x=>x.nodeId===selectedTopicId);if(!t)return;
+  const el=document.getElementById('descContent');const toggle=document.getElementById('descToggle');
+  if(!el||!toggle)return;
+  _expandedDesc=!_expandedDesc;
+  if(_expandedDesc){el.innerHTML=renderMarkdown(t.fullDescription||t.description);toggle.innerHTML='Show less &#9650;'}
+  else{el.innerHTML=renderMarkdown(t.description);toggle.innerHTML='Show full description &#9660;'}
+}
+async function loadProjectSuggestions(){
+  const el=document.getElementById('projectSuggestions');if(!el)return;
+  const projects=await loadProjects();
+  const relevant=getRelevantProjects(currentSlug);
+  if(!relevant.length){el.innerHTML='';return}
+  let html='<div class="content-card fade-in project-section"><h3>&#128736; Suggested Projects</h3>';
+  relevant.forEach(p=>{
+    html+='<div class="project-card"><div class="project-title">'+esc(p.title)+'</div><div class="project-desc">'+esc(p.description)+'</div><div class="project-meta"><span class="project-difficulty '+p.difficulty+'">'+esc(p.difficulty)+'</span><span class="project-time">&#128337; '+esc(p.estimatedTime)+'</span>';
+    p.topics.slice(0,3).forEach(t=>{html+='<span class="project-tag">'+esc(t)+'</span>'});
+    html+='</div></div>';
+  });
+  html+='</div>';el.innerHTML=html;
 }
 function showWelcome(){document.getElementById('welcomeScreen').style.display='flex';document.getElementById('topicDetail').style.display='none'}
 function setTopicStatus(nid,status){
@@ -488,6 +668,11 @@ function setTopicStatus(nid,status){
   setTopicProgress(nid,{status,timestamp:status==='completed'?new Date().toISOString():prev.timestamp});
   updateProgressStats();buildSidebar(document.getElementById('topicSearch').value.trim());
   if(selectedTopicId===nid)selectTopic(nid);if(currentView==='graph')renderGraph();
+  // Check for badge award
+  if(status==='completed'&&currentSlug){
+    const earned=checkAndAwardBadge(currentSlug);
+    if(earned){buildHome()} // refresh cards with new badge
+  }
   buildHome(); // refresh card progress
 }
 function updateNotes(nid,notes){setTopicProgress(nid,{notes})}
@@ -646,18 +831,25 @@ window.addEventListener('resize',()=>{if(currentView==='graph')renderGraph()});
 
 // ===== Export / Import / Reset =====
 function exportProgress(){
-  const d=loadProgress();const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  const data={progress:loadProgress(),badges:loadBadges(),lastViewed:getLastViewed()};
+  const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='roadmap-progress.json';a.click();URL.revokeObjectURL(a.href);
 }
 function importProgress(){
   const input=document.createElement('input');input.type='file';input.accept='.json';
   input.onchange=e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();
-    reader.onload=ev=>{try{const imported=JSON.parse(ev.target.result);const existing=loadProgress();saveProgress({...existing,...imported});updateProgressStats();buildSidebar(document.getElementById('topicSearch').value.trim());if(selectedTopicId)selectTopic(selectedTopicId);buildHome()}catch(err){alert('Invalid JSON file')}};reader.readAsText(file)};
+    reader.onload=ev=>{try{const imported=JSON.parse(ev.target.result);
+      if(imported.progress){const existing=loadProgress();saveProgress({...existing,...imported.progress})}
+      if(imported.badges){const existing=loadBadges();saveBadges({...existing,...imported.badges})}
+      if(imported.lastViewed){const existing=getLastViewed();localStorage.setItem(LVK,JSON.stringify({...existing,...imported.lastViewed}))}
+      updateProgressStats();buildSidebar(document.getElementById('topicSearch').value.trim());if(selectedTopicId)selectTopic(selectedTopicId);buildHome()
+    }catch(err){alert('Invalid JSON file')}};reader.readAsText(file)};
   input.click();
 }
 function resetProgress(){
   if(!confirm('Reset ALL progress? This cannot be undone.'))return;
-  localStorage.removeItem(PK);updateProgressStats();buildSidebar(document.getElementById('topicSearch').value.trim());
+  localStorage.removeItem(PK);localStorage.removeItem(BK);localStorage.removeItem(LVK);
+  updateProgressStats();buildSidebar(document.getElementById('topicSearch').value.trim());
   if(selectedTopicId)selectTopic(selectedTopicId);buildHome();
 }
 
@@ -671,6 +863,7 @@ function resetProgress(){
     document.getElementById('cardGrid').innerHTML='<div style="padding:40px;text-align:center;color:var(--muted)">Failed to load index.json</div>';
     return;
   }
+  await loadProjects();
   buildHome();
 })();
 </script>
