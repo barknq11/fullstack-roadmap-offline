@@ -8,10 +8,10 @@
 :root{--bg:#f8fafc;--card:#fff;--border:#e2e8f0;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--accent-dark:#1d4ed8;--hover:#f1f5f9;--active-bg:#dbeafe;--active-text:#1d4ed8;--code-bg:#f1f5f9;--pre-bg:#0f172a;--pre-text:#e2e8f0;--graph-bg:#f8fafc;--tooltip-bg:#0f172a;--tooltip-text:#fff;--graph-btn-bg:#fff;--graph-btn-hover:#f1f5f9;--shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);--shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);--shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);--radius:12px;--radius-sm:8px;--radius-xs:6px;--status-completed:#16a34a;--status-inprogress:#f59e0b;--status-notstarted:#94a3b8;--status-completed-bg:#dcfce7;--status-inprogress-bg:#fef3c7;--status-notstarted-bg:#f1f5f9;--graph-completed:#22c55e;--graph-inprogress:#fbbf24;--filter-active-bg:var(--accent);--filter-active-text:#fff;--badge-video-bg:#fee2e2;--badge-video-text:#991b1b;--badge-article-bg:#dbeafe;--badge-article-text:#1d4ed8;--badge-official-bg:#dcfce7;--badge-official-text:#166534;--badge-opensource-bg:#f3e8ff;--badge-opensource-text:#6b21a8;--badge-course-bg:#fef3c7;--badge-course-text:#92400e;--badge-feed-bg:#e0f2fe;--badge-feed-text:#075985;--badge-default-bg:#f1f5f9;--badge-default-text:#64748b}
 [data-theme="dark"]{--bg:#0f172a;--card:#1e293b;--border:#334155;--text:#e2e8f0;--muted:#94a3b8;--accent:#60a5fa;--accent-dark:#93bbfc;--hover:#334155;--active-bg:#1e3a5f;--active-text:#93c5fd;--code-bg:#1e293b;--pre-bg:#020617;--pre-text:#e2e8f0;--graph-bg:#0f172a;--tooltip-bg:#e2e8f0;--tooltip-text:#0f172a;--graph-btn-bg:#1e293b;--graph-btn-hover:#334155;--shadow:0 1px 3px rgba(0,0,0,.3);--shadow-md:0 4px 6px rgba(0,0,0,.3);--shadow-lg:0 10px 15px rgba(0,0,0,.4);--status-completed:#22c55e;--status-inprogress:#fbbf24;--status-notstarted:#64748b;--status-completed-bg:#052e16;--status-inprogress-bg:#422006;--status-notstarted-bg:#1e293b;--graph-completed:#22c55e;--graph-inprogress:#fbbf24;--badge-video-bg:#450a0a;--badge-video-text:#fca5a5;--badge-article-bg:#1e3a5f;--badge-article-text:#93c5fd;--badge-official-bg:#052e16;--badge-official-text:#86efac;--badge-opensource-bg:#2e1065;--badge-opensource-text:#d8b4fe;--badge-course-bg:#451a03;--badge-course-text:#fcd34d;--badge-feed-bg:#0c4a6e;--badge-feed-text:#7dd3fc;--badge-default-bg:#1e293b;--badge-default-text:#94a3b8}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;transition:background .2s,color .2s}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;transition:background .2s,color .2s;display:flex;flex-direction:column;height:100vh;overflow:hidden}
 
 /* ===== HEADER ===== */
-.header{background:var(--card);border-bottom:1px solid var(--border);padding:0 28px;position:sticky;top:0;z-index:50;box-shadow:var(--shadow);transition:background .2s,border .2s}
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:0 28px;position:sticky;top:0;z-index:50;box-shadow:var(--shadow);transition:background .2s,border .2s;flex-shrink:0}
 .header-row{display:flex;align-items:center;gap:16px;padding:14px 0 8px}
 .header-row h1{font-size:20px;font-weight:700;flex:1;display:flex;align-items:center;gap:10px}
 .header-row h1 .logo{width:32px;height:32px;border-radius:var(--radius-sm);background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
@@ -32,7 +32,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .breadcrumbs .current{color:var(--text);font-weight:600}
 
 /* ===== HOME PAGE (Roadmap.sh Layout) ===== */
-.home-wrap{padding:0;max-width:1400px;margin:0 auto}
+.home-wrap{padding:0;max-width:1400px;margin:0 auto;flex:1;overflow-y:auto}
 .home-layout{display:flex;min-height:calc(100vh - 80px)}
 .home-sidebar{width:280px;min-width:280px;padding:32px 24px;border-right:1px solid var(--border);position:sticky;top:80px;height:calc(100vh - 80px);overflow-y:auto}
 .home-sidebar-header{margin-bottom:24px}
@@ -64,7 +64,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 @media(max-width:700px){.home-layout{flex-direction:column}.home-sidebar{width:100%;min-width:0;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);padding:20px 16px}.home-main{padding:16px}.roadmap-grid{grid-template-columns:1fr}}
 
 /* ===== ROADMAP VIEW ===== */
-.view-wrap{display:flex;height:calc(100vh - 100px)}
+.view-wrap{display:flex;flex:1;overflow:hidden}
 .view-wrap.graph-mode{flex-direction:column}
 
 /* Sidebar */
@@ -96,8 +96,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .topic-item .res-badge{margin-left:auto;font-size:10px;color:var(--muted);background:var(--hover);padding:1px 6px;border-radius:10px}
 
 /* Main content */
-.main-content{flex:1;overflow-y:auto;padding:28px 36px 60px}
-.welcome-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;color:var(--muted)}
+.main-content{flex:1;overflow-y:auto;padding:28px 36px 60px;display:flex;flex-direction:column}
+.welcome-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;color:var(--muted)}
 .welcome-screen h2{font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
 .welcome-screen p{font-size:14px;max-width:400px}
 .topic-detail{max-width:780px;animation:fadeUp .2s ease}
@@ -140,7 +140,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .notes-timestamp{font-size:11px;color:var(--muted);font-weight:400}
 
 /* Graph */
-.graph-wrap{flex:1;position:relative;overflow:hidden;background:var(--graph-bg);transition:background .2s}
+.graph-wrap{flex:1;position:relative;overflow:hidden;background:var(--graph-bg);transition:background .2s;display:flex;flex-direction:column}
 .graph-controls{position:absolute;bottom:16px;right:16px;z-index:10;display:flex;flex-direction:column;gap:4px}
 .graph-btn{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--graph-btn-bg);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);transition:all .12s;color:var(--text)}
 .graph-btn:hover{background:var(--graph-btn-hover)}
@@ -162,7 +162,7 @@ svg.roadmap-svg .node-label-text{font-size:11px;fill:var(--muted);pointer-events
 .sidebar-collapse-btn.collapsed{left:0}
 
 /* View tabs */
-.view-tabs{display:flex;gap:4px;padding:0 0 0 16px}
+.view-tabs{display:flex;gap:4px;padding:8px 16px;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0}
 .view-tab{padding:6px 12px;border-radius:var(--radius-xs);cursor:pointer;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:transparent;border:1px solid transparent;transition:all .15s}
 .view-tab:hover{color:var(--text)}
 .view-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
@@ -231,7 +231,7 @@ svg.roadmap-svg .node-label-text{font-size:11px;fill:var(--muted);pointer-events
 
 /* Responsive */
 @media(max-width:900px){.sidebar{width:280px;min-width:280px}.sidebar-collapse-btn{left:280px}.main-content{padding:20px}.search-global{flex:0 0 200px}}
-@media(max-width:700px){.view-wrap{flex-direction:column;height:auto}.sidebar{width:100%;min-width:0;max-height:40vh;border-right:none;border-bottom:1px solid var(--border)}.sidebar.collapsed{max-height:0}.sidebar-collapse-btn{display:none}.card-grid{grid-template-columns:1fr}.home-wrap{padding:20px 16px}.header-row{padding:10px 0 6px}.search-global{flex:0 0 160px}.main-content{padding:16px}.continue-banner{flex-direction:column;text-align:center}}
+@media(max-width:700px){.view-wrap{flex-direction:column;height:auto}.sidebar{width:100%;min-width:0;max-height:40vh;border-right:none;border-bottom:1px solid var(--border)}.sidebar.collapsed{max-height:0}.sidebar-collapse-btn{display:none}.roadmap-grid{grid-template-columns:1fr}.home-wrap{padding:16px}.header-row{padding:10px 0 6px}.search-global{flex:0 0 160px}.main-content{padding:16px}.continue-banner{flex-direction:column;text-align:center}}
 </style>
 </head>
 <body>
@@ -581,7 +581,7 @@ async function openRoadmap(slug){
   if(meta)document.documentElement.style.setProperty('--accent',meta.color);
   // Breadcrumbs
   const bc=document.getElementById('breadcrumbs');bc.style.display='flex';
-  let catName='';CAT_ORDER.forEach(c=>{if(CATEGORIES[c]&&CATEGORIES[c].includes(slug))catName=c});
+  let catName=meta?meta.category:'';
   bc.innerHTML='<a onclick="goHome()">Home</a><span class="sep">&#9656;</span>'+(catName?'<a onclick="goHome()">'+esc(catName)+'</a><span class="sep">&#9656;</span>':'')+'<span class="current">'+esc(meta?meta.title:slug)+'</span>';
   // Load roadmap data
   document.getElementById('welcomeScreen').innerHTML='<h2>Loading...</h2>';
@@ -614,10 +614,10 @@ function goHome(){
 function buildViewTabs(){
   // Remove old view tabs if any
   const old=document.getElementById('viewTabsContainer');if(old)old.remove();
-  const bc=document.getElementById('breadcrumbs');
+  const mainContent=document.getElementById('mainContent');
   const wrap=document.createElement('div');wrap.id='viewTabsContainer';wrap.className='view-tabs';
   wrap.innerHTML='<div class="view-tab active" data-view="list">List</div><div class="view-tab" data-view="graph">Graph</div>';
-  bc.parentNode.insertBefore(wrap,bc.nextSibling);
+  mainContent.insertBefore(wrap,mainContent.firstChild);
   wrap.querySelectorAll('.view-tab').forEach(tab=>{
     tab.addEventListener('click',()=>{
       currentView=tab.dataset.view;
