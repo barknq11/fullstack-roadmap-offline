@@ -32,9 +32,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .breadcrumbs .current{color:var(--text);font-weight:600}
 
 /* ===== HOME PAGE (Roadmap.sh Layout) ===== */
-.home-wrap{padding:0;max-width:1400px;margin:0 auto;flex:1;overflow-y:auto}
-.home-layout{display:flex;min-height:calc(100vh - 80px)}
-.home-sidebar{width:280px;min-width:280px;padding:32px 24px;border-right:1px solid var(--border);position:sticky;top:80px;height:calc(100vh - 80px);overflow-y:auto}
+.home-wrap{padding:0;flex:1;overflow-y:auto}
+.home-layout{display:flex;min-height:100%}
+.home-sidebar{width:280px;min-width:280px;padding:32px 24px;border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0}
 .home-sidebar-header{margin-bottom:24px}
 .home-sidebar-header h1{font-size:24px;font-weight:800;margin-bottom:8px;line-height:1.2}
 .home-sidebar-header p{font-size:14px;color:var(--muted);line-height:1.5}
@@ -47,7 +47,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .category-item:hover{background:var(--hover)}
 .category-item.active{background:var(--active-bg);color:var(--active-text);font-weight:600}
 .category-count{font-size:12px;color:var(--muted);font-weight:400;min-width:20px;text-align:right}
-.home-main{flex:1;padding:32px 40px 60px}
+.home-main{flex:1;padding:32px 40px 60px;min-width:0}
 .roadmap-section{margin-bottom:32px}
 .roadmap-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px;padding-left:4px}
 .roadmap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
@@ -616,7 +616,7 @@ function buildViewTabs(){
   const old=document.getElementById('viewTabsContainer');if(old)old.remove();
   const mainContent=document.getElementById('mainContent');
   const wrap=document.createElement('div');wrap.id='viewTabsContainer';wrap.className='view-tabs';
-  wrap.innerHTML='<div class="view-tab active" data-view="list">List</div><div class="view-tab" data-view="graph">Graph</div>';
+  wrap.innerHTML='<div class="view-tab active" data-view="list">List</div><div class="view-tab" data-view="graph">Graph</div><div class="view-tab" data-view="split">Split</div>';
   mainContent.insertBefore(wrap,mainContent.firstChild);
   wrap.querySelectorAll('.view-tab').forEach(tab=>{
     tab.addEventListener('click',()=>{
@@ -630,9 +630,15 @@ function buildViewTabs(){
         layout.style.display='none';graphWrap.style.display='flex';sidebar.style.display='none';
         document.getElementById('sidebarCollapse').style.display='none';
         requestAnimationFrame(()=>{requestAnimationFrame(()=>renderGraph())});
+      }else if(currentView==='split'){
+        layout.style.display='flex';graphWrap.style.display='flex';sidebar.style.display='';
+        document.getElementById('sidebarCollapse').style.display='';
+        layout.style.flex='0 0 40%';graphWrap.style.flex='1';
+        requestAnimationFrame(()=>{requestAnimationFrame(()=>renderGraph())});
       }else{
         layout.style.display='flex';graphWrap.style.display='none';sidebar.style.display='';
         document.getElementById('sidebarCollapse').style.display='';
+        layout.style.flex='1';graphWrap.style.flex='1';
       }
     });
   });

@@ -247,13 +247,26 @@ foreach ($slug in $roadmapSlugs) {
       if (Test-Path $slugFile) { try { $detail = Get-Content $slugFile -Raw | ConvertFrom-Json } catch {} }
     }
     $label = $topicNodes[$nodeId].label
+    if (-not $label -or $label -eq 'null') { $label = "Topic $orderIndex" }
     $desc = ''
     $fullDesc = ''
     $res = @()
     if ($detail) {
       $fullDesc = if ($detail.description) { $detail.description } else { '' }
       $desc = if ($fullDesc.Length -gt 300) { $fullDesc.Substring(0,300) + '...' } else { $fullDesc }
-      $res = if ($detail.resources) { $detail.resources | Select-Object -First 4 } else { @() }
+      # Get resources, deduplicate by URL, limit to 8
+      if ($detail.resources) {
+        $seenUrls = @{}
+        $uniqueRes = @()
+        foreach ($r in $detail.resources) {
+          $urlKey = if ($r.url) { $r.url } else { $r.title }
+          if ($urlKey -and -not $seenUrls.ContainsKey($urlKey)) {
+            $seenUrls[$urlKey] = $true
+            $uniqueRes += $r
+          }
+        }
+        $res = $uniqueRes | Select-Object -First 8
+      }
     }
     
     # Resolve prerequisite/leadsTo nodeIds to labels

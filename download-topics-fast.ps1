@@ -3,13 +3,27 @@ $dataDir = Join-Path $base "data"
 $topicDir = Join-Path $dataDir "topics"
 if (-not (Test-Path $topicDir)) { New-Item -ItemType Directory -Path $topicDir -Force | Out-Null }
 
+# All roadmap slugs from generate-all.ps1
 $slugs = @(
-  'frontend-beginner','backend-beginner','devops-beginner','git-github-beginner',
-  'python','python-data-analysis','sql','javascript','typescript','nodejs',
-  'java','cpp','rust','golang','php','kotlin',
-  'html','css','swift-ui','shell-bash',
-  'laravel','django','ruby','ruby-on-rails',
-  'full-stack','frontend','backend','devops','aws'
+  'ai-agents','ai-and-data-scientist','ai-engineer','ai-product-builders','ai-red-teaming',
+  'android','angular','api-design','api-security','asp-net-core','aws',
+  'backend','backend-beginner','backend-performance','bi-analyst','c',
+  'claude-code','cloudflare','code-review','computer-science','cpp',
+  'css','data-analyst','data-engineer','data-structures-algorithms','design-architecture',
+  'design-system','developer-relations','devops','devops-beginner','devsecops',
+  'django','docker','elasticsearch','engineering-manager','flutter',
+  'forward-deployed-engineer','frontend','frontend-beginner','frontend-performance','full-stack',
+  'game-developer','git-and-github','git-and-github-beginner','go','graphql',
+  'html','ios','java','javascript','kotlin',
+  'kubernetes','laravel','leetcode','linux','machine-learning',
+  'mlops','mongodb','network-engineer','next-js','nodejs',
+  'openclaw','php','postgresql','power-bi','product-design',
+  'product-manager','prompt-engineering','python','python-for-data-analysis','qa',
+  'r','react','react-native','redis','ruby',
+  'ruby-on-rails','rust','scala','server-side-game-developer','shell-bash',
+  'software-architect','spring-boot','sql','swift-swift-ui','system-design',
+  'technical-writer','terraform','typescript','ux-design','vibe-coding',
+  'vue','wordpress'
 )
 
 # Phase 1: Collect all needed node IDs
