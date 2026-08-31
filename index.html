@@ -31,25 +31,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .breadcrumbs .sep{color:var(--border);font-size:11px}
 .breadcrumbs .current{color:var(--text);font-weight:600}
 
-/* ===== HOME PAGE (Card Grid) ===== */
-.home-wrap{max-width:1200px;margin:0 auto;padding:32px 28px 60px}
-.home-title{font-size:28px;font-weight:800;margin-bottom:6px}
-.home-subtitle{color:var(--muted);font-size:15px;margin-bottom:36px}
-.category-section{margin-bottom:36px}
-.category-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:14px;padding-left:4px}
-.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.roadmap-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.roadmap-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:var(--accent)}
-.roadmap-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--card-accent,var(--accent));opacity:0;transition:opacity .2s}
-.roadmap-card:hover::before{opacity:1}
-.card-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.card-icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;background:var(--card-accent,var(--accent))}
-.card-title{font-size:15px;font-weight:700;line-height:1.3}
-.card-meta{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:12px;color:var(--muted)}
-.card-meta .topic-count{display:flex;align-items:center;gap:4px}
-.progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:4px}
-.progress-fill{height:100%;background:var(--status-completed);border-radius:3px;transition:width .4s ease}
-.card-progress{font-size:11px;color:var(--muted);font-weight:500}
+/* ===== HOME PAGE (Roadmap.sh Layout) ===== */
+.home-wrap{padding:0;max-width:1400px;margin:0 auto}
+.home-layout{display:flex;min-height:calc(100vh - 80px)}
+.home-sidebar{width:280px;min-width:280px;padding:32px 24px;border-right:1px solid var(--border);position:sticky;top:80px;height:calc(100vh - 80px);overflow-y:auto}
+.home-sidebar-header{margin-bottom:24px}
+.home-sidebar-header h1{font-size:24px;font-weight:800;margin-bottom:8px;line-height:1.2}
+.home-sidebar-header p{font-size:14px;color:var(--muted);line-height:1.5}
+.home-search{position:relative;margin-bottom:24px}
+.home-search input{width:100%;padding:10px 14px 10px 38px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:var(--bg);color:var(--text);outline:none;transition:border .15s,box-shadow .15s}
+.home-search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.home-search .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+.category-nav{display:flex;flex-direction:column;gap:2px}
+.category-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:500;color:var(--text);transition:all .15s}
+.category-item:hover{background:var(--hover)}
+.category-item.active{background:var(--active-bg);color:var(--active-text);font-weight:600}
+.category-count{font-size:12px;color:var(--muted);font-weight:400;min-width:20px;text-align:right}
+.home-main{flex:1;padding:32px 40px 60px}
+.roadmap-section{margin-bottom:32px}
+.roadmap-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px;padding-left:4px}
+.roadmap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.roadmap-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 18px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.roadmap-card:hover{border-color:var(--accent);box-shadow:var(--shadow);transform:translateY(-1px)}
+.roadmap-card-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.roadmap-card-icon{width:36px;height:36px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.roadmap-card-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.roadmap-card-bookmark{width:32px;height:32px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:16px;flex-shrink:0;transition:all .15s;border:1px solid transparent}
+.roadmap-card-bookmark:hover{background:var(--hover);color:var(--accent);border-color:var(--border)}
+.roadmap-card-bookmark.active{color:var(--accent)}
+/* Responsive */
+@media(max-width:900px){.home-sidebar{width:240px;min-width:240px}.home-main{padding:24px 20px}}
+@media(max-width:700px){.home-layout{flex-direction:column}.home-sidebar{width:100%;min-width:0;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);padding:20px 16px}.home-main{padding:16px}.roadmap-grid{grid-template-columns:1fr}}
 
 /* ===== ROADMAP VIEW ===== */
 .view-wrap{display:flex;height:calc(100vh - 100px)}
@@ -242,10 +254,23 @@ svg.roadmap-svg .node-label-text{font-size:11px;fill:var(--muted);pointer-events
 
 <!-- HOME PAGE -->
 <div class="home-wrap" id="homePage">
-  <div class="home-title">Choose Your Path</div>
-  <div class="home-subtitle">21 developer roadmaps with interactive graphs, progress tracking, and curated resources.</div>
-  <div id="continueBanner" style="display:none"></div>
-  <div id="cardGrid"></div>
+  <div class="home-layout">
+    <div class="home-sidebar">
+      <div class="home-sidebar-header">
+        <h1>Developer Roadmaps</h1>
+        <p>Community driven, up-to-date paths to learn any tool or technology.</p>
+      </div>
+      <div class="home-search">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" id="homeSearch" placeholder="Search roadmaps...">
+      </div>
+      <div class="category-nav" id="categoryNav"></div>
+    </div>
+    <div class="home-main">
+      <div id="continueBanner" style="display:none"></div>
+      <div id="roadmapGrid"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ROADMAP VIEW -->
@@ -299,13 +324,7 @@ let currentFilter = 'all';
 let graphScale=1,graphPanX=0,graphPanY=0,isPanning=false,panStartX=0,panStartY=0,panMouseDownX=0,panMouseDownY=0,didDrag=false;
 
 // ===== Categories =====
-const CATEGORIES = {
-  'Role-Based': ['full-stack','frontend','backend','devops','aws'],
-  'For Beginners': ['frontend-beginner','backend-beginner','devops-beginner'],
-  'Languages & Platforms': ['python','sql','javascript','typescript','nodejs','java','cpp','rust','golang','php','kotlin','swift-ui'],
-  'Frameworks': ['ruby-on-rails']
-};
-const CAT_ORDER = ['Role-Based','For Beginners','Languages & Platforms','Frameworks'];
+// Categories are now loaded from INDEX.categories
 
 // ===== Theme =====
 function toggleTheme(){
@@ -424,39 +443,114 @@ async function loadRoadmapData(slug){
 }
 
 // ===== Home Page =====
+let currentCategory = 'all';
+let homeSearchQuery = '';
+
 function buildHome(){
-  const grid=document.getElementById('cardGrid');
-  grid.innerHTML='';
   if(!INDEX)return;
+  
+  // Build category navigation
+  buildCategoryNav();
+  
+  // Build roadmap grid
+  buildRoadmapGrid();
   
   // Continue where you left off banner
   buildContinueBanner();
+}
+
+function buildCategoryNav(){
+  const nav=document.getElementById('categoryNav');
+  if(!nav||!INDEX.categories)return;
+  nav.innerHTML='';
   
-  CAT_ORDER.forEach(cat=>{
-    const slugs=CATEGORIES[cat];if(!slugs||!slugs.length)return;
-    const sec=document.createElement('div');sec.className='category-section';
-    sec.innerHTML='<div class="category-title">'+esc(cat)+'</div>';
-    const row=document.createElement('div');row.className='card-grid';
-    slugs.forEach(slug=>{
-      const meta=INDEX.meta[slug];if(!meta)return;
-      const rd=DATA_CACHE[slug];
-      const prog=getRoadmapProgress(slug);
-      const topicCount=rd?rd.topics.length:meta.topicCount||0;
-      const pct=topicCount>0?Math.round(prog.completed/topicCount*100):0;
-      const badge=getBadgeLevel(slug);
-      const badgeHtml=badge?'<div class="badge-dot '+badge+'" title="'+badge.charAt(0).toUpperCase()+badge.slice(1)+' badge"></div>':'';
-      const card=document.createElement('div');card.className='roadmap-card';
-      card.style.setProperty('--card-accent',meta.color);
-      card.innerHTML=badgeHtml+'<div class="card-header"><div class="card-icon" style="background:'+meta.color+'">'+esc(meta.icon)+'</div><div class="card-title">'+esc(meta.title)+'</div></div><div class="card-meta"><span class="topic-count">'+topicCount+' topics</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+meta.color+'"></div></div><div class="card-progress">'+prog.completed+'/'+topicCount+' completed ('+pct+'%)</div>';
-      card.addEventListener('click',()=>openRoadmap(slug));
-      row.appendChild(card);
-    });
-    sec.appendChild(row);grid.appendChild(sec);
+  // All Roadmaps
+  const allCount=INDEX.slugs.length;
+  const allItem=document.createElement('div');
+  allItem.className='category-item'+(currentCategory==='all'?' active':'');
+  allItem.innerHTML='<span>All Roadmaps</span><span class="category-count">'+allCount+'</span>';
+  allItem.addEventListener('click',()=>{currentCategory='all';buildHome()});
+  nav.appendChild(allItem);
+  
+  // Category items
+  const catOrder=['Absolute Beginners','Role Based','Languages','Frameworks','Web','DevOps & Cloud','Databases','CS Fundamentals','AI & Emerging','Best Practices','Product Design','Power BI','QA','Python','Shell'];
+  catOrder.forEach(cat=>{
+    const slugs=INDEX.categories[cat];
+    if(!slugs||!slugs.length)return;
+    const item=document.createElement('div');
+    item.className='category-item'+(currentCategory===cat?' active':'');
+    item.innerHTML='<span>'+esc(cat)+'</span><span class="category-count">'+slugs.length+'</span>';
+    item.addEventListener('click',()=>{currentCategory=cat;buildHome()});
+    nav.appendChild(item);
   });
+}
+
+function buildRoadmapGrid(){
+  const main=document.getElementById('roadmapGrid');
+  if(!main)return;
+  main.innerHTML='';
+  
+  let slugsToShow=[];
+  if(currentCategory==='all'){
+    slugsToShow=INDEX.slugs;
+  }else{
+    slugsToShow=INDEX.categories[currentCategory]||[];
+  }
+  
+  // Apply search filter
+  if(homeSearchQuery){
+    const q=homeSearchQuery.toLowerCase();
+    slugsToShow=slugsToShow.filter(slug=>{
+      const meta=INDEX.meta[slug];
+      if(!meta)return false;
+      return meta.title.toLowerCase().includes(q)||slug.toLowerCase().includes(q);
+    });
+  }
+  
+  // Group by category for display
+  const groups={};
+  slugsToShow.forEach(slug=>{
+    const meta=INDEX.meta[slug];
+    if(!meta)return;
+    const cat=meta.category||'Other';
+    if(!groups[cat])groups[cat]=[];
+    groups[cat].push(slug);
+  });
+  
+  // Build sections
+  const sectionOrder=['Role Based','Languages','Frameworks','Web','DevOps & Cloud','Databases','CS Fundamentals','AI & Emerging','Absolute Beginners','Best Practices','Product Design','Power BI','QA','Python','Shell'];
+  sectionOrder.forEach(cat=>{
+    const slugs=groups[cat];
+    if(!slugs||!slugs.length)return;
+    
+    const sec=document.createElement('div');
+    sec.className='roadmap-section';
+    sec.innerHTML='<div class="roadmap-section-title">'+esc(cat)+'</div>';
+    
+    const grid=document.createElement('div');
+    grid.className='roadmap-grid';
+    
+    slugs.forEach(slug=>{
+      const meta=INDEX.meta[slug];
+      const card=document.createElement('div');
+      card.className='roadmap-card';
+      card.innerHTML='<div class="roadmap-card-left"><div class="roadmap-card-icon" style="background:'+meta.color+'">'+esc(meta.icon)+'</div><div class="roadmap-card-title">'+esc(meta.title)+'</div></div><div class="roadmap-card-bookmark" onclick="event.stopPropagation()">&#9734;</div>';
+      card.addEventListener('click',()=>openRoadmap(slug));
+      grid.appendChild(card);
+    });
+    
+    sec.appendChild(grid);
+    main.appendChild(sec);
+  });
+  
+  if(slugsToShow.length===0){
+    main.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted)">No roadmaps found</div>';
+  }
 }
 
 function buildContinueBanner(){
   const banner=document.getElementById('continueBanner');
+  if(!banner)return;
   const lv=getLastViewed();
   // Find most recent last-viewed across all slugs
   let mostRecent=null;let mostRecentSlug=null;
@@ -470,6 +564,12 @@ function buildContinueBanner(){
   banner.style.display='block';
   banner.innerHTML='<div class="continue-banner" onclick="openRoadmap(\''+esc(mostRecentSlug)+'\');setTimeout(()=>selectTopic(\''+esc(mostRecent.topicId)+'\'),200)"><div class="continue-icon" style="background:'+meta.color+'">'+esc(meta.icon)+'</div><div class="continue-info"><div class="continue-label">Continue where you left off</div><div class="continue-title">'+esc(meta.title)+' &mdash; '+esc(mostRecent.topicTitle)+'</div><div class="continue-meta">'+prog.completed+'/'+prog.total+' completed ('+pct+'%)</div></div><div class="continue-arrow">&#9654;</div></div>';
 }
+
+// Home search
+document.getElementById('homeSearch').addEventListener('input',e=>{
+  homeSearchQuery=e.target.value.trim();
+  buildRoadmapGrid();
+});
 
 // ===== Open Roadmap =====
 async function openRoadmap(slug){
@@ -680,33 +780,10 @@ function updateNotes(nid,notes){setTopicProgress(nid,{notes})}
 // ===== Search =====
 document.getElementById('globalSearch').addEventListener('input',e=>{
   const q=e.target.value.trim().toLowerCase();
-  if(!q){if(currentPage==='home')buildHome();else buildSidebar('');return}
+  if(!q){if(currentPage==='home'){homeSearchQuery='';buildHome()}else buildSidebar('');return}
   if(currentPage==='home'){
-    // Search across all roadmaps, show matching topics
-    const grid=document.getElementById('cardGrid');grid.innerHTML='';
-    const sec=document.createElement('div');sec.className='category-section';
-    sec.innerHTML='<div class="category-title">Search Results</div>';
-    const row=document.createElement('div');row.className='card-grid';
-    let found=0;
-    Object.keys(INDEX.meta).forEach(slug=>{
-      const meta=INDEX.meta[slug];if(!meta)return;
-      const rd=DATA_CACHE[slug];
-      if(!rd)return; // skip if not loaded yet
-      rd.topics.forEach(t=>{
-        const label=t.title||t.nodeId;
-        const match=label.toLowerCase().includes(q)||(t.description||'').toLowerCase().includes(q)||(t.resources||[]).some(r=>(r.title||'').toLowerCase().includes(q)||(r.url||'').toLowerCase().includes(q));
-        if(match){
-          found++;
-          const card=document.createElement('div');card.className='roadmap-card';
-          card.style.setProperty('--card-accent',meta.color);
-          card.innerHTML='<div class="card-header"><div class="card-icon" style="background:'+meta.color+';width:28px;height:28px;font-size:10px">'+esc(meta.icon)+'</div><div class="card-title" style="font-size:13px">'+esc(label)+'</div></div><div class="card-meta"><span style="font-size:11px;color:var(--muted)">'+esc(meta.title)+'</span></div>';
-          card.addEventListener('click',()=>{openRoadmap(slug);setTimeout(()=>selectTopic(t.nodeId),100)});
-          row.appendChild(card);
-        }
-      });
-    });
-    if(!found)row.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No topics found for "'+esc(q)+'"</div>';
-    sec.appendChild(row);grid.appendChild(sec);
+    homeSearchQuery=q;
+    buildRoadmapGrid();
   }else{
     buildSidebar(q);
   }
