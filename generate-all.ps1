@@ -2,13 +2,52 @@
 $ErrorActionPreference = 'Stop'
 $base = 'D:\FullStack-Roadmap-Offline'
 
-$roadmapSlugs = @('full-stack','frontend','backend','devops','aws')
+$roadmapSlugs = @(
+  # Original role-based
+  'full-stack','frontend','backend','devops','aws',
+  # Absolute Beginners
+  'frontend-beginner','backend-beginner','devops-beginner','git-github-beginner',
+  # Languages / Platforms
+  'python','python-data-analysis','sql','javascript','typescript','nodejs',
+  'java','cpp','rust','golang','php','kotlin',
+  'html','css','swift-ui','shell-bash',
+  # Frameworks
+  'laravel','django','ruby','ruby-on-rails'
+)
 $roadmapMeta = @{
-  'full-stack' = @{ color='#2563eb'; icon='🔧'; title='Full Stack Developer' }
-  'frontend'   = @{ color='#16a34a'; icon='🎨'; title='Frontend Developer' }
-  'backend'    = @{ color='#9333ea'; icon='⚙️'; title='Backend Developer' }
-  'devops'     = @{ color='#ea580c'; icon='🚀'; title='DevOps Engineer' }
-  'aws'        = @{ color='#f59e0b'; icon='☁️'; title='AWS Cloud Engineer' }
+  # Original
+  'full-stack'           = @{ color='#2563eb'; icon='FS'; title='Full Stack Developer' }
+  'frontend'             = @{ color='#16a34a'; icon='FE'; title='Frontend Developer' }
+  'backend'              = @{ color='#9333ea'; icon='BE'; title='Backend Developer' }
+  'devops'               = @{ color='#ea580c'; icon='DO'; title='DevOps Engineer' }
+  'aws'                  = @{ color='#f59e0b'; icon='AW'; title='AWS Cloud Engineer' }
+  # Absolute Beginners
+  'frontend-beginner'    = @{ color='#3b82f6'; icon='FB'; title='Frontend Beginner' }
+  'backend-beginner'     = @{ color='#22c55e'; icon='BB'; title='Backend Beginner' }
+  'devops-beginner'      = @{ color='#f97316'; icon='DB'; title='DevOps Beginner' }
+  'git-github-beginner'  = @{ color='#8b5cf6'; icon='GB'; title='Git & GitHub Beginner' }
+  # Languages / Platforms
+  'python'               = @{ color='#3776ab'; icon='PY'; title='Python' }
+  'python-data-analysis' = @{ color='#ff6f00'; icon='PD'; title='Python for Data Analysis' }
+  'sql'                  = @{ color='#e38c00'; icon='SQ'; title='SQL' }
+  'javascript'           = @{ color='#f7df1e'; icon='JS'; title='JavaScript' }
+  'typescript'           = @{ color='#3178c6'; icon='TS'; title='TypeScript' }
+  'nodejs'               = @{ color='#339933'; icon='NJ'; title='Node.js' }
+  'java'                 = @{ color='#ed8b00'; icon='JV'; title='Java' }
+  'cpp'                  = @{ color='#00599c'; icon='C+'; title='C++' }
+  'rust'                 = @{ color='#dea584'; icon='RS'; title='Rust' }
+  'golang'               = @{ color='#00add8'; icon='GO'; title='Go' }
+  'php'                  = @{ color='#777bb4'; icon='PH'; title='PHP' }
+  'kotlin'               = @{ color='#7f52ff'; icon='KT'; title='Kotlin' }
+  'html'                 = @{ color='#e34c26'; icon='HT'; title='HTML' }
+  'css'                  = @{ color='#1572b6'; icon='CS'; title='CSS' }
+  'swift-ui'             = @{ color='#fa7343'; icon='SW'; title='Swift & SwiftUI' }
+  'shell-bash'           = @{ color='#4eaa25'; icon='SH'; title='Shell / Bash' }
+  # Frameworks
+  'laravel'              = @{ color='#ff2d20'; icon='LV'; title='Laravel' }
+  'django'               = @{ color='#092e20'; icon='DJ'; title='Django' }
+  'ruby'                 = @{ color='#cc342d'; icon='RB'; title='Ruby' }
+  'ruby-on-rails'        = @{ color='#cc0000'; icon='RR'; title='Ruby on Rails' }
 }
 
 # Load all roadmap data + topics
@@ -528,10 +567,10 @@ $part2 = @'
 function toggleTheme() {
   const html = document.documentElement;
   const current = html.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-  updateThemeIcon(next);
+  const nextTheme = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', nextTheme);
+  localStorage.setItem('theme', nextTheme);
+  updateThemeIcon(nextTheme);
   // Re-render graph if visible
   if (currentView === 'graph') {
     setTimeout(() => renderGraph(DATA.roadmaps[currentSlug]), 50);
@@ -589,8 +628,8 @@ function updateProgressStats() {
 }
 function toggleTopicStatus(nodeId) {
   const current = getTopicProgress(nodeId);
-  const next = current.status === 'not-started' ? 'in-progress' : current.status === 'in-progress' ? 'completed' : 'not-started';
-  setTopicProgress(nodeId, { status: next, timestamp: next === 'completed' ? new Date().toISOString() : current.timestamp });
+  const nextStatus = current.status === 'not-started' ? 'in-progress' : current.status === 'in-progress' ? 'completed' : 'not-started';
+  setTopicProgress(nodeId, { status: nextStatus, timestamp: nextStatus === 'completed' ? new Date().toISOString() : current.timestamp });
   updateProgressStats();
   buildSidebar(document.getElementById('search').value.trim());
   if (selectedTopicId === nodeId) selectTopic(nodeId);
