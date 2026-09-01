@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -688,7 +688,7 @@ function selectTopic(nid,pushState){
   const rd=DATA_CACHE[currentSlug];if(!rd)return;
   const t=rd.topics.find(x=>x.nodeId===nid);
   if(!t)return;selectedTopicId=nid;
-  if(pushState!==false)history.pushState({slug:currentSlug,topicId:nid},''','#'+currentSlug+'/'+nid);
+  if(pushState!==false)history.pushState({slug:currentSlug,topicId:nid},'', '#'+currentSlug+'/'+nid);
   
   // Save last viewed
   saveLastViewed(currentSlug,nid,t.title||nid);
