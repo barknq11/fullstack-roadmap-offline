@@ -618,16 +618,14 @@ function applyViewLayout(view){
   const graphWrap=document.getElementById('graphWrap');
   const sidebar=document.getElementById('sidebar');
   const collapse=document.getElementById('sidebarCollapse');
+  sidebar.style.display='';collapse.style.display='';
   if(view==='graph'){
-    layout.style.display='none';graphWrap.style.display='flex';sidebar.style.display='none';
-    collapse.style.display='none';
+    layout.style.display='none';graphWrap.style.display='flex';
   }else if(view==='split'){
-    layout.style.display='flex';graphWrap.style.display='flex';sidebar.style.display='';
-    collapse.style.display='';
+    layout.style.display='flex';graphWrap.style.display='flex';
     layout.style.flex='0 0 40%';graphWrap.style.flex='1';
   }else{
-    layout.style.display='flex';graphWrap.style.display='none';sidebar.style.display='';
-    collapse.style.display='';
+    layout.style.display='flex';graphWrap.style.display='none';
     layout.style.flex='1';graphWrap.style.flex='1';
   }
 }
