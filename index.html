@@ -613,8 +613,25 @@ function goHome(pushState){
 }
 
 // ===== View Tabs =====
+function applyViewLayout(view){
+  const layout=document.getElementById('mainContent');
+  const graphWrap=document.getElementById('graphWrap');
+  const sidebar=document.getElementById('sidebar');
+  const collapse=document.getElementById('sidebarCollapse');
+  if(view==='graph'){
+    layout.style.display='none';graphWrap.style.display='flex';sidebar.style.display='none';
+    collapse.style.display='none';
+  }else if(view==='split'){
+    layout.style.display='flex';graphWrap.style.display='flex';sidebar.style.display='';
+    collapse.style.display='';
+    layout.style.flex='0 0 40%';graphWrap.style.flex='1';
+  }else{
+    layout.style.display='flex';graphWrap.style.display='none';sidebar.style.display='';
+    collapse.style.display='';
+    layout.style.flex='1';graphWrap.style.flex='1';
+  }
+}
 function buildViewTabs(){
-  // Remove old view tabs if any
   const old=document.getElementById('viewTabsContainer');if(old)old.remove();
   const mainContent=document.getElementById('mainContent');
   const wrap=document.createElement('div');wrap.id='viewTabsContainer';wrap.className='view-tabs';
@@ -625,23 +642,8 @@ function buildViewTabs(){
       currentView=tab.dataset.view;
       wrap.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
       tab.classList.add('active');
-      const layout=document.getElementById('mainContent');
-      const graphWrap=document.getElementById('graphWrap');
-      const sidebar=document.getElementById('sidebar');
-      if(currentView==='graph'){
-        layout.style.display='none';graphWrap.style.display='flex';sidebar.style.display='none';
-        document.getElementById('sidebarCollapse').style.display='none';
-        requestAnimationFrame(()=>{requestAnimationFrame(()=>renderGraph())});
-      }else if(currentView==='split'){
-        layout.style.display='flex';graphWrap.style.display='flex';sidebar.style.display='';
-        document.getElementById('sidebarCollapse').style.display='';
-        layout.style.flex='0 0 40%';graphWrap.style.flex='1';
-        requestAnimationFrame(()=>{requestAnimationFrame(()=>renderGraph())});
-      }else{
-        layout.style.display='flex';graphWrap.style.display='none';sidebar.style.display='';
-        document.getElementById('sidebarCollapse').style.display='';
-        layout.style.flex='1';graphWrap.style.flex='1';
-      }
+      applyViewLayout(currentView);
+      if(currentView==='graph'||currentView==='split')requestAnimationFrame(()=>{requestAnimationFrame(()=>renderGraph())});
     });
   });
 }
@@ -882,17 +884,26 @@ function renderGraph(){
 }
 function updateGraphTransform(){const g=document.getElementById('graphGroup');if(g)g.setAttribute('transform','translate('+graphPanX+','+graphPanY+') scale('+graphScale+')')}
 function selectTopicFromGraph(nid){
-  currentView='list';
-  document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
-  const lt=document.querySelector('.view-tab[data-view="list"]');if(lt)lt.classList.add('active');
-  document.getElementById('mainContent').style.display='flex';
-  document.getElementById('graphWrap').style.display='none';
-  document.getElementById('sidebar').style.display='';
-  document.getElementById('sidebarCollapse').style.display='';
+  // In split view: keep the layout, just show the topic detail
+  if(currentView==='split'){
+    selectTopic(nid);
+    return;
+  }
+  // In graph-only view: switch to split so user sees both graph + detail
+  if(currentView==='graph'){
+    currentView='split';
+    document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
+    const st=document.querySelector('.view-tab[data-view="split"]');if(st)st.classList.add('active');
+    applyViewLayout('split');
+    requestAnimationFrame(()=>{requestAnimationFrame(()=>renderGraph())});
+    selectTopic(nid);
+    return;
+  }
+  // In list view: normal behavior
   selectTopic(nid);
 }
 function highlightGraphNode(nid){
-  if(currentView!=='graph')return;
+  if(currentView!=='graph'&&currentView!=='split')return;
   document.querySelectorAll('.node-rect.highlighted').forEach(el=>el.classList.remove('highlighted'));
   const g=document.querySelector('[data-nodeid="'+nid+'"]');
   if(g){const r=g.querySelector('.node-rect');if(r)r.classList.add('highlighted')}
